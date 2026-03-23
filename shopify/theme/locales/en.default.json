@@ -1,0 +1,37 @@
+{
+  "general": {
+    "skip_to_content": "Skip to content",
+    "newsletter_signup": "Sign up for our newsletter",
+    "cookie_accept": "Accept",
+    "loading": "Loading..."
+  },
+  "navigation": {
+    "becoming": "You Are Still Becoming",
+    "building": "We Are Still Building",
+    "nothing_finished": "Nothing Is Finished",
+    "be_relentless": "Be Relentless",
+    "shop": "Shop",
+    "cart": "Cart",
+    "account": "Account",
+    "search": "Search"
+  },
+  "newsletter": {
+    "heading": "Join the Movement",
+    "placeholder": "Enter your email",
+    "button": "Sign Up",
+    "consent": "I agree to receive email communications from Relentless. You can unsubscribe at any time.",
+    "consent_error": "Please agree to receive emails before subscribing.",
+    "success": "Welcome to the movement. Check your email to confirm."
+  },
+  "accessibility": {
+    "menu_toggle": "Menu",
+    "close": "Close",
+    "external_link": "Opens in a new window"
+  },
+  "shop": {
+    "add_to_cart": "Add to Cart",
+    "sold_out": "Sold Out",
+    "coming_soon": "Coming Soon",
+    "drop_live": "DROP IS LIVE"
+  }
+}

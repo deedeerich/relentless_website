@@ -1,0 +1,85 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "heading": "NOTHING IS FINISHED",
+        "subheading": "Every day. Every step. Every moment. Move forward.",
+        "cta_text": "Be Relentless",
+        "cta_link": "/collections/all"
+      }
+    },
+    "pillars": {
+      "type": "four-pillars",
+      "settings": {
+        "heading": "THE FOUR PILLARS"
+      },
+      "blocks": {
+        "pillar_1": {
+          "type": "pillar",
+          "settings": {
+            "title": "You Are Still Becoming",
+            "description": "Mindset. Growth. Athlete stories. Performance psychology.",
+            "link": "/pages/you-are-still-becoming"
+          }
+        },
+        "pillar_2": {
+          "type": "pillar",
+          "settings": {
+            "title": "We Are Still Building",
+            "description": "Community. Impact. Volunteering. Mentorship.",
+            "link": "/pages/we-are-still-building"
+          }
+        },
+        "pillar_3": {
+          "type": "pillar",
+          "settings": {
+            "title": "Nothing Is Finished",
+            "description": "Brand philosophy. Manifesto. Origin story.",
+            "link": "/pages/nothing-is-finished"
+          }
+        },
+        "pillar_4": {
+          "type": "pillar",
+          "settings": {
+            "title": "Be Relentless",
+            "description": "Shop. Apparel. Exclusive drops. Ambassadors.",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": ["pillar_1", "pillar_2", "pillar_3", "pillar_4"]
+    },
+    "featured_video": {
+      "type": "youtube-embed",
+      "settings": {
+        "heading": "THE JOURNEY",
+        "youtube_url": "",
+        "description": "Watch the Relentless story unfold."
+      }
+    },
+    "newsletter": {
+      "type": "newsletter-signup",
+      "settings": {
+        "heading": "JOIN THE MOVEMENT",
+        "subheading": "Be the first to know about exclusive drops, athlete spotlights, and community events.",
+        "button_text": "Sign Up",
+        "gdpr_consent_text": "I agree to receive email communications from Relentless. You can unsubscribe at any time."
+      }
+    },
+    "ambassadors_preview": {
+      "type": "ambassadors-coming-soon",
+      "settings": {
+        "heading": "AMBASSADORS",
+        "subheading": "Coming soon. Coaches and athletes who embody the Relentless mindset."
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "pillars",
+    "featured_video",
+    "newsletter",
+    "ambassadors_preview"
+  ]
+}

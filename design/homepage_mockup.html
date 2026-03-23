@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RELENTLESS — Homepage Design Reference</title>
+  <style>
+    /* This is a DESIGN REFERENCE file — not production code.
+       Replicate this layout in Shopify Liquid theme sections. */
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      background: #000;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero .tagline {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: #C5A55A;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .hero .subtitle {
+      font-size: 1.125rem;
+      color: #999;
+      max-width: 600px;
+      margin-bottom: 3rem;
+    }
+
+    .btn-gold {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: #C5A55A;
+      color: #000;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 2px solid #C5A55A;
+      transition: all 0.2s;
+    }
+
+    .btn-gold:hover {
+      background: transparent;
+      color: #C5A55A;
+    }
+
+    /* Four Pillars */
+    .pillars {
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pillars h2 {
+      text-align: center;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      letter-spacing: 0.1em;
+      margin-bottom: 4rem;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .pillar-card {
+      border: 1px solid #333;
+      padding: 2rem;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .pillar-card:hover {
+      border-color: #C5A55A;
+    }
+
+    .pillar-card h3 {
+      font-size: 1.125rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      color: #C5A55A;
+    }
+
+    .pillar-card p {
+      color: #999;
+      font-size: 0.875rem;
+    }
+
+    /* Newsletter */
+    .newsletter {
+      padding: 6rem 2rem;
+      text-align: center;
+      border-top: 1px solid #222;
+    }
+
+    .newsletter h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .newsletter p {
+      color: #999;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .newsletter form {
+      display: flex;
+      gap: 0;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .newsletter input[type="email"] {
+      flex: 1;
+      padding: 1rem;
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .newsletter button {
+      padding: 1rem 2rem;
+      background: #C5A55A;
+      color: #000;
+      border: none;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* Ambassadors Coming Soon */
+    .ambassadors {
+      padding: 6rem 2rem;
+      text-align: center;
+      border-top: 1px solid #222;
+    }
+
+    .ambassadors h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .ambassadors p {
+      color: #999;
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid #222;
+      color: #666;
+      font-size: 0.75rem;
+    }
+
+    footer a { color: #C5A55A; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <!-- Logo placement: NOTHING IS FINISHED / RELENTLESS manifesto lockup -->
+    <h1>RELENTLESS</h1>
+    <div class="tagline">N O T H I N G &nbsp; I S &nbsp; F I N I S H E D</div>
+    <p class="subtitle">Every day. Every step. Every moment. Move forward.</p>
+    <a href="/collections/all" class="btn-gold">Be Relentless</a>
+  </section>
+
+  <!-- FOUR PILLARS -->
+  <section class="pillars">
+    <h2>THE FOUR PILLARS</h2>
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <h3>You Are Still Becoming</h3>
+        <p>Mindset. Growth. Athlete stories. Performance psychology.</p>
+      </div>
+      <div class="pillar-card">
+        <h3>We Are Still Building</h3>
+        <p>Community. Impact. Volunteering. Mentorship.</p>
+      </div>
+      <div class="pillar-card">
+        <h3>Nothing Is Finished</h3>
+        <p>Brand philosophy. Manifesto. Origin story. Mission.</p>
+      </div>
+      <div class="pillar-card">
+        <h3>Be Relentless</h3>
+        <p>Shop. Apparel. Exclusive drops. Ambassadors.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER SIGNUP -->
+  <section class="newsletter">
+    <h2>JOIN THE MOVEMENT</h2>
+    <p>Be the first to know about exclusive drops, athlete spotlights, and community events.</p>
+    <form>
+      <input type="email" placeholder="Enter your email" aria-label="Email address" required>
+      <button type="submit">Sign Up</button>
+    </form>
+  </section>
+
+  <!-- AMBASSADORS -->
+  <section class="ambassadors">
+    <h2>AMBASSADORS</h2>
+    <p>Coming soon. Coaches and athletes who embody the Relentless mindset.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Relentless (Edges &amp; Dreams LLC). All rights reserved.</p>
+    <p>
+      <a href="/pages/privacy-policy">Privacy Policy</a> &middot;
+      <a href="/pages/terms-of-service">Terms of Service</a> &middot;
+      <a href="/pages/community-guidelines">Community Guidelines</a>
+    </p>
+  </footer>
+
+</body>
+</html>

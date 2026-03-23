@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0">
+
+  <title>
+    {{ page_title }}{% unless page_title contains shop.name %} — {{ shop.name }}{% endunless %}
+  </title>
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  {%- comment -%} CSP Headers — Security-first {%- endcomment -%}
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' https:;
+                 script-src 'self' 'unsafe-inline' https://cdn.shopify.com https://www.youtube.com https://s.ytimg.com;
+                 style-src 'self' 'unsafe-inline' https://cdn.shopify.com https://fonts.googleapis.com;
+                 img-src 'self' https: data:;
+                 font-src 'self' https://fonts.gstatic.com https://cdn.shopify.com;
+                 frame-src https://www.youtube.com https://www.youtube-nocookie.com;
+                 connect-src 'self' https://monorail-edge.shopifysvc.com https://a.]klaviyo.com;">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+
+  {%- comment -%} Preconnect for performance {%- endcomment -%}
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  {%- comment -%} Favicon {%- endcomment -%}
+  {% if settings.favicon != blank %}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {% endif %}
+
+  {%- comment -%} Theme stylesheet {%- endcomment -%}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  {%- comment -%} Canonical URL for SEO {%- endcomment -%}
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {{ content_for_header }}
+</head>
+
+<body class="template-{{ template.name | handle }}{% if template.suffix %} template-{{ template.suffix | handle }}{% endif %}">
+
+  {%- comment -%} Skip to content — WCAG 2.1 AA accessibility requirement {%- endcomment -%}
+  <a class="skip-to-content" href="#main-content">Skip to content</a>
+
+  {%- comment -%} Cookie consent banner — GDPR/CCPA requirement {%- endcomment -%}
+  {% render 'cookie-consent' %}
+
+  {%- section 'header' -%}
+
+  <main id="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {%- section 'footer' -%}
+
+  {%- comment -%} Klaviyo tracking — loaded after content for performance {%- endcomment -%}
+  {% if settings.klaviyo_public_key != blank %}
+    <script async src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id={{ settings.klaviyo_public_key }}"></script>
+  {% endif %}
+
+  {%- comment -%} Theme JavaScript {%- endcomment -%}
+  {{ 'theme.js' | asset_url | script_tag }}
+</body>
+</html>

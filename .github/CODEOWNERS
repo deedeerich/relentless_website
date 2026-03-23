@@ -1,0 +1,23 @@
+# ============================================
+# RELENTLESS — CODEOWNERS
+# ============================================
+# All changes to sensitive paths require review.
+# GitHub enforces this on protected branches.
+
+# Security-critical files — always require review
+SECURITY.md                     @deedeerich
+.env.example                    @deedeerich
+.github/                        @deedeerich
+.github/workflows/              @deedeerich
+
+# Core configuration
+CLAUDE.md                       @deedeerich
+shopify/theme/config/           @deedeerich
+shopify/theme/layout/           @deedeerich
+
+# Moderation system — security-sensitive
+moderation/                     @deedeerich
+
+# Scripts with external access
+scripts/                        @deedeerich
+klaviyo/                        @deedeerich

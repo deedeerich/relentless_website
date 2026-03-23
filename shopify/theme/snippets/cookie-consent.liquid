@@ -1,0 +1,25 @@
+{%- comment -%}
+  Cookie Consent Banner — GDPR / CCPA compliance.
+  Shows on first visit. Acceptance stored in localStorage via theme.js.
+  Controlled by theme setting: show_cookie_consent.
+{%- endcomment -%}
+
+{% if settings.show_cookie_consent %}
+<div id="cookie-consent-banner"
+     class="cookie-consent"
+     role="dialog"
+     aria-label="Cookie consent"
+     aria-describedby="cookie-consent-message"
+     hidden>
+  <div class="container cookie-consent__inner">
+    <p id="cookie-consent-message">
+      We use cookies to improve your experience and for analytics.
+      See our <a href="{{ settings.privacy_policy_url }}">Privacy Policy</a> for details.
+      {% if settings.show_ccpa_notice %}
+        California residents: <a href="{{ settings.privacy_policy_url }}#ccpa">Do Not Sell My Personal Information</a>.
+      {% endif %}
+    </p>
+    <button class="btn btn-primary" data-cookie-accept>Accept</button>
+  </div>
+</div>
+{% endif %}

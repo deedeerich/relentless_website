@@ -1,0 +1,148 @@
+# ============================================
+# RELENTLESS — Klaviyo Email Flow Architecture
+# ============================================
+# This file documents the email flows to configure in Klaviyo.
+# Flows are built in Klaviyo's visual editor, not deployed from code.
+# This serves as the source-of-truth specification.
+#
+# All flows require:
+#   - Double opt-in (GDPR/CAN-SPAM/CASL)
+#   - Unsubscribe link in every email
+#   - Sender: Relentless <noreply@relentlessperforma.com>
+#   - Reply-to: hello@relentlessperforma.com
+# ============================================
+
+flows:
+
+  # ----- Welcome Series -----
+  welcome_series:
+    trigger: "List subscription — Relentless Newsletter"
+    description: "New subscriber welcome sequence. Introduces brand, pillars, and community."
+    emails:
+      - name: "Welcome to the Movement"
+        delay: "immediate"
+        subject: "Welcome to Relentless — Nothing Is Finished"
+        content_brief: |
+          Brand welcome. Four pillars intro. YouTube channel link.
+          CTA: Explore the site / Watch the story.
+
+      - name: "The Philosophy"
+        delay: "3 days"
+        subject: "Why Nothing Is Finished"
+        content_brief: |
+          Brand manifesto and origin story. Stephen and Chelsea's journey.
+          CTA: Read the full story on the site.
+
+      - name: "Join the Community"
+        delay: "5 days"
+        subject: "Your Story Matters"
+        content_brief: |
+          Invite to submit content. Explain the spotlight system.
+          CTA: Submit your story / Browse community content.
+
+  # ----- Drop Announcement -----
+  drop_announcement:
+    trigger: "Manual / Scheduled — when drop date is set"
+    description: "Exclusive drop notification to waitlisted and subscribed users."
+    emails:
+      - name: "Drop Preview"
+        delay: "3 days before drop"
+        subject: "Something's Coming — [Drop Name]"
+        content_brief: |
+          Teaser image. Drop date and time. Countdown energy.
+          CTA: Mark your calendar.
+
+      - name: "Drop Is Live"
+        delay: "drop time"
+        subject: "IT'S LIVE — [Drop Name]"
+        content_brief: |
+          Product image. Direct link to product page. Urgency (qty=1).
+          CTA: Shop Now — first to checkout wins.
+
+      - name: "Drop Recap"
+        delay: "1 day after drop"
+        subject: "That Was Relentless — [Drop Name] Recap"
+        content_brief: |
+          Winner announcement (with permission). Community reaction.
+          CTA: Join the waitlist for the next drop.
+
+  # ----- Abandoned Cart -----
+  abandoned_cart:
+    trigger: "Shopify checkout started, not completed"
+    description: "Standard abandoned cart recovery. Shopify integration via Klaviyo."
+    emails:
+      - name: "You Left Something Behind"
+        delay: "1 hour"
+        subject: "Still thinking about it?"
+        content_brief: |
+          Cart contents. Product image. Simple reminder.
+          CTA: Complete your order.
+
+      - name: "Last Chance"
+        delay: "24 hours"
+        subject: "Your cart is waiting"
+        content_brief: |
+          Final reminder. Brand voice — not pushy.
+          CTA: Finish checking out.
+
+  # ----- Post-Purchase -----
+  post_purchase:
+    trigger: "Shopify order placed"
+    description: "Thank you + community invite after purchase."
+    emails:
+      - name: "Thank You"
+        delay: "immediate"
+        subject: "You're Part of This Now"
+        content_brief: |
+          Order confirmation. Brand gratitude. Welcome to the community.
+          CTA: Follow on YouTube / Share your story.
+
+  # ----- Content Submission Notifications -----
+  content_submission:
+    trigger: "Webhook — moderation queue status change"
+    description: "Notify submitters of content moderation decisions."
+    emails:
+      - name: "Submission Received"
+        delay: "immediate"
+        subject: "We Got Your Story"
+        content_brief: |
+          Confirmation that submission is in review queue.
+          Expected timeline for review.
+
+      - name: "Submission Approved"
+        delay: "on approval"
+        subject: "Your Story Is Live on Relentless"
+        content_brief: |
+          Link to published content. Thank you. Share CTA.
+
+      - name: "Submission Needs Edits"
+        delay: "on edit request"
+        subject: "Almost There — A Quick Edit"
+        content_brief: |
+          Reviewer feedback. Link to resubmit.
+
+      - name: "Submission Not Published"
+        delay: "on rejection"
+        subject: "About Your Submission"
+        content_brief: |
+          Respectful explanation. Reference community guidelines.
+          Encourage future submissions.
+
+  # ----- Winback / Re-engagement -----
+  winback:
+    trigger: "No email open or site visit in 90 days"
+    description: "Re-engage inactive subscribers before 2-year purge threshold."
+    emails:
+      - name: "We Miss You"
+        delay: "90 days inactive"
+        subject: "Still Becoming?"
+        content_brief: |
+          Highlight recent content and drops they missed.
+          CTA: Come back and see what's new.
+
+      - name: "Last Call"
+        delay: "120 days inactive"
+        subject: "Are You Still With Us?"
+        content_brief: |
+          Let them know they'll be removed if inactive.
+          CTA: Stay subscribed / Unsubscribe.
