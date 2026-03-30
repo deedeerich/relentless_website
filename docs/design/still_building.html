@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We Are Still Building — Relentless</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4982E;
+  --gold-dim: #8B6420;
+  --black: #060504;
+  --dark: #0d0b08;
+  --white: #f5f0e8;
+  --white-dim: rgba(245,240,232,0.7);
+  --white-ghost: rgba(245,240,232,0.25);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100; padding: 20px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(6,5,4,0.97), transparent);
+  transition: background 0.6s;
+}
+nav.scrolled { background: rgba(6,5,4,0.97); border-bottom: 1px solid rgba(200,146,42,0.12); }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.12em; color: var(--white); text-decoration: none; display: flex; flex-direction: column; line-height: 1; }
+.nav-logo span { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 9px; letter-spacing: 0.38em; color: var(--gold); margin-top: 2px; }
+.nav-back { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(245,240,232,0.35); text-decoration: none; transition: color 0.3s; }
+.nav-back:hover { color: var(--gold); }
+
+/* ── HERO — elevated, emotional, brief ── */
+.page-hero {
+  min-height: 55vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  text-align: center; padding: 0 48px 72px;
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 20%, rgba(180,120,30,0.1) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 40% at 50% 100%, rgba(80,50,8,0.2) 0%, transparent 60%);
+}
+
+.hero-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 11px;
+  letter-spacing: 0.42em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  animation: fadeUp 1.4s ease both;
+}
+.gold-rule { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300; font-style: italic;
+  font-size: clamp(42px, 6vw, 76px);
+  color: var(--white); line-height: 0.95;
+  margin-bottom: 24px; letter-spacing: 0.01em;
+  animation: fadeUp 1.4s ease 0.15s both;
+}
+
+.hero-sub {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300; font-size: 16px;
+  color: rgba(245,240,232,0.42); letter-spacing: 0.1em;
+  animation: fadeUp 1.4s ease 0.3s both;
+}
+
+/* ── INTENTIONAL SHIFT — the hard line ── */
+.shift-line {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,146,42,0.3), transparent);
+  margin: 0;
+}
+
+/* ── META STATEMENT — the philosophical anchor ── */
+.meta-statement {
+  background: var(--dark);
+  padding: 64px 48px;
+  text-align: center;
+  border-bottom: 1px solid rgba(200,146,42,0.08);
+}
+.meta-statement p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-weight: 300;
+  font-size: clamp(18px, 2.2vw, 26px);
+  color: rgba(245,240,232,0.55);
+  line-height: 1.8; max-width: 640px;
+  margin: 0 auto;
+  letter-spacing: 0.02em;
+}
+.meta-statement p strong {
+  color: rgba(245,240,232,0.82);
+  font-style: normal; font-weight: 400;
+}
+.meta-statement .meta-action {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300; font-size: 14px;
+  color: rgba(245,240,232,0.3);
+  margin-top: 20px; letter-spacing: 0.1em;
+  font-style: normal;
+}
+
+/* ── CATEGORY GRID ── */
+.categories {
+  background: var(--black);
+  padding: 72px 48px;
+}
+.categories-inner { max-width: 1000px; margin: 0 auto; }
+.categories-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; letter-spacing: 0.4em;
+  color: rgba(245,240,232,0.2); text-transform: uppercase;
+  margin-bottom: 32px; text-align: center;
+}
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+/* ── CATEGORY CARD — elevated entry ── */
+.category-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(200,146,42,0.08);
+  padding: 40px 36px;
+  cursor: pointer;
+  transition: background 0.6s, border-color 0.6s;
+  position: relative;
+  overflow: hidden;
+}
+.category-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transition: width 0.7s ease;
+}
+.category-card:hover { background: rgba(200,146,42,0.04); border-color: rgba(200,146,42,0.2); }
+.category-card:hover::after { width: 100%; }
+
+.category-icon {
+  font-size: 24px; margin-bottom: 16px; display: block;
+  opacity: 0.6;
+}
+.category-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400; font-style: italic;
+  font-size: 26px; color: var(--white);
+  margin-bottom: 8px; line-height: 1.1;
+}
+.category-desc {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300; font-size: 13px;
+  color: rgba(245,240,232,0.35);
+  letter-spacing: 0.06em; line-height: 1.6;
+  margin-bottom: 24px;
+}
+.category-expand {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 10px;
+  letter-spacing: 0.3em; color: var(--gold);
+  text-transform: uppercase;
+  opacity: 0; transform: translateX(-4px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.category-card:hover .category-expand { opacity: 1; transform: translateX(0); }
+
+/* ── ACTION PAGE — intentionally simple ── */
+.action-page {
+  display: none;
+  position: fixed; inset: 0;
+  background: #0a0806;
+  z-index: 200;
+  overflow-y: auto;
+  padding: 0;
+}
+.action-page.open { display: block; animation: fadeIn 0.5s ease; }
+
+.action-header {
+  padding: 32px 48px 24px;
+  border-bottom: 1px solid rgba(200,146,42,0.1);
+  display: flex; align-items: center; gap: 24px;
+  position: sticky; top: 0;
+  background: rgba(10,8,6,0.97);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.action-close {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: rgba(245,240,232,0.3);
+  cursor: pointer; border: none; background: none;
+  transition: color 0.3s; padding: 0;
+}
+.action-close:hover { color: var(--gold); }
+.action-header-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 13px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: rgba(245,240,232,0.5);
+}
+
+.action-body { max-width: 680px; margin: 0 auto; padding: 56px 48px 80px; }
+
+/* The intentional raw header */
+.action-meta {
+  border-left: 2px solid rgba(200,146,42,0.25);
+  padding: 20px 0 20px 24px;
+  margin-bottom: 48px;
+}
+.action-meta p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-weight: 300;
+  font-size: clamp(16px, 2vw, 21px);
+  color: rgba(245,240,232,0.45);
+  line-height: 1.7;
+}
+.action-meta p strong {
+  color: rgba(245,240,232,0.75);
+  font-style: normal; font-weight: 400;
+}
+
+.action-category-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400; font-style: italic;
+  font-size: clamp(32px, 4vw, 52px);
+  color: var(--white); line-height: 1;
+  margin-bottom: 40px; letter-spacing: 0.01em;
+}
+
+/* Action list — intentionally plain */
+.action-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+
+.action-item {
+  border-top: 1px solid rgba(245,240,232,0.06);
+  padding: 24px 0;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: border-color 0.4s;
+}
+.action-item:last-child { border-bottom: 1px solid rgba(245,240,232,0.06); }
+.action-item:hover { border-top-color: rgba(200,146,42,0.2); }
+
+.action-item-name {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 500; font-size: 16px;
+  color: var(--white); letter-spacing: 0.02em;
+}
+.action-item-what {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300; font-size: 13px;
+  color: rgba(245,240,232,0.45); letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+.action-item-link {
+  display: inline-block; margin-top: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 11px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); text-decoration: none;
+  transition: letter-spacing 0.3s;
+}
+.action-item-link:hover { letter-spacing: 0.35em; }
+.action-item-link.coming-soon {
+  color: rgba(245,240,232,0.2); cursor: default; pointer-events: none;
+}
+
+/* Checkbox — the symbolic tracker */
+.action-tracker {
+  margin-top: 48px;
+  padding: 28px 32px;
+  border: 1px solid rgba(200,146,42,0.12);
+  display: flex; align-items: center; gap: 16px;
+  background: rgba(200,146,42,0.02);
+}
+.tracker-check {
+  width: 20px; height: 20px;
+  border: 1px solid rgba(200,146,42,0.3);
+  cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.4s, border-color 0.4s;
+}
+.tracker-check.checked { background: rgba(200,146,42,0.15); border-color: var(--gold); }
+.tracker-check.checked::after { content: '✓'; color: var(--gold); font-size: 12px; }
+.tracker-text {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300; font-size: 14px;
+  color: rgba(245,240,232,0.4); letter-spacing: 0.04em;
+}
+.tracker-text.checked-text { color: rgba(245,240,232,0.6); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .category-grid { grid-template-columns: 1fr; }
+  .page-hero, .meta-statement, .categories { padding-left: 24px; padding-right: 24px; }
+  .action-body { padding: 40px 24px 60px; }
+  .action-header { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="relentless_homepage.html" class="nav-logo">RELENTLESS<span>Nothing Is Finished</span></a>
+  <a href="relentless_homepage.html" class="nav-back">← Back</a>
+</nav>
+
+<!-- HERO — elevated and emotional -->
+<section class="page-hero">
+  <div class="hero-eyebrow"><div class="gold-rule"></div>We Are Still Building<div class="gold-rule"></div></div>
+  <h1 class="hero-title">Serving something<br>bigger than ourselves.</h1>
+  <p class="hero-sub">Community · Impact · Purpose</p>
+</section>
+
+<div class="shift-line"></div>
+
+<!-- META STATEMENT — the philosophical bridge -->
+<div class="meta-statement">
+  <p>
+    <strong>Nothing is finished.</strong><br>
+    This page isn't either.<br><br>
+    But you don't need a finished page to start.<br>
+    Pick something. Do one thing. Keep going.
+  </p>
+  <p class="meta-action">We're not waiting until everything is perfect to give back.</p>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories">
+  <div class="categories-inner">
+    <p class="categories-label">Start somewhere real</p>
+    <div class="category-grid">
+
+      <div class="category-card" onclick="openAction('education')">
+        <span class="category-icon">📚</span>
+        <h2 class="category-title">Children &amp; Education</h2>
+        <p class="category-desc">Show up. Help a kid learn something. Sponsor. Mentor. Tutor. It doesn't take a lot.</p>
+        <span class="category-expand">See where to start →</span>
+      </div>
+
+      <div class="category-card" onclick="openAction('health')">
+        <span class="category-icon">🎗️</span>
+        <h2 class="category-title">Health &amp; Healing</h2>
+        <p class="category-desc">Support people fighting hard battles. Your time and resources matter more than you know.</p>
+        <span class="category-expand">See where to start →</span>
+      </div>
+
+      <div class="category-card" onclick="openAction('community')">
+        <span class="category-icon">🤝</span>
+        <h2 class="category-title">Community Support</h2>
+        <p class="category-desc">Neighborhoods, food banks, shelters. People near you need what you have to give.</p>
+        <span class="category-expand">See where to start →</span>
+      </div>
+
+      <div class="category-card" onclick="openAction('sports')">
+        <span class="category-icon">⛸️</span>
+        <h2 class="category-title">Youth &amp; Sports</h2>
+        <p class="category-desc">Give a young athlete the chance you had — or the one you didn't. This one's personal.</p>
+        <span class="category-expand">See where to start →</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ACTION PAGES — intentionally simple -->
+
+<div class="action-page" id="action-education">
+  <div class="action-header">
+    <button class="action-close" onclick="closeAction()">← Back</button>
+    <span class="action-header-title">We Are Still Building</span>
+  </div>
+  <div class="action-body">
+    <div class="action-meta">
+      <p>This page is intentionally simple.<br><br>
+      If you're here, you're not looking for inspiration.<br>
+      <strong>You're looking to do something.</strong><br><br>
+      So here are places to start.</p>
+    </div>
+    <h2 class="action-category-title">Children &amp;<br>Education</h2>
+    <ul class="action-list">
+      <li class="action-item">
+        <span class="action-item-name">Compassion International</span>
+        <span class="action-item-what">Sponsor a child — food, education, healthcare, and hope.</span>
+        <a href="https://www.compassion.com" target="_blank" rel="noopener" class="action-item-link">Sponsor a child →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">DonorsChoose</span>
+        <span class="action-item-what">Fund a classroom project directly. Teachers post what they need. You make it happen.</span>
+        <a href="https://www.donorschoose.org" target="_blank" rel="noopener" class="action-item-link">Fund a classroom →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Big Brothers Big Sisters</span>
+        <span class="action-item-what">Become a mentor. One hour a week changes a kid's trajectory.</span>
+        <a href="https://www.bbbs.org" target="_blank" rel="noopener" class="action-item-link">Become a mentor →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Local Schools</span>
+        <span class="action-item-what">Volunteer. Read to kids. Help with after-school programs. Show up.</span>
+        <a href="#" class="action-item-link coming-soon">Find local opportunities — coming soon</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">826 National</span>
+        <span class="action-item-what">Support creative writing and tutoring programs for students in under-resourced schools.</span>
+        <a href="https://826national.org" target="_blank" rel="noopener" class="action-item-link">Get involved →</a>
+      </li>
+    </ul>
+    <div class="action-tracker" id="tracker-education">
+      <div class="tracker-check" id="check-education" onclick="toggleCheck('education')"></div>
+      <span class="tracker-text" id="tracker-text-education">I took one step today.</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-page" id="action-health">
+  <div class="action-header">
+    <button class="action-close" onclick="closeAction()">← Back</button>
+    <span class="action-header-title">We Are Still Building</span>
+  </div>
+  <div class="action-body">
+    <div class="action-meta">
+      <p>This page is intentionally simple.<br><br>
+      If you're here, you're not looking for inspiration.<br>
+      <strong>You're looking to do something.</strong><br><br>
+      So here are places to start.</p>
+    </div>
+    <h2 class="action-category-title">Health &amp;<br>Healing</h2>
+    <ul class="action-list">
+      <li class="action-item">
+        <span class="action-item-name">American Cancer Society</span>
+        <span class="action-item-what">Volunteer, donate, or join an event. People fighting cancer need community.</span>
+        <a href="https://www.cancer.org/involved" target="_blank" rel="noopener" class="action-item-link">Get involved →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Meals on Wheels</span>
+        <span class="action-item-what">Deliver meals to seniors who can't leave home. One route. Real impact.</span>
+        <a href="https://www.mealsonwheelsamerica.org" target="_blank" rel="noopener" class="action-item-link">Volunteer →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Give Blood</span>
+        <span class="action-item-what">One donation saves up to three lives. Takes an hour. The Red Cross makes it easy.</span>
+        <a href="https://www.redcrossblood.org" target="_blank" rel="noopener" class="action-item-link">Find a drive →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Mental Health America</span>
+        <span class="action-item-what">Support mental health awareness. Volunteer, advocate, or just share their resources.</span>
+        <a href="https://www.mhanational.org/get-involved" target="_blank" rel="noopener" class="action-item-link">Get involved →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Local Hospital Volunteering</span>
+        <span class="action-item-what">Most hospitals take volunteers. Show up for people who need it most.</span>
+        <a href="#" class="action-item-link coming-soon">Find local opportunities — coming soon</a>
+      </li>
+    </ul>
+    <div class="action-tracker" id="tracker-health">
+      <div class="tracker-check" id="check-health" onclick="toggleCheck('health')"></div>
+      <span class="tracker-text" id="tracker-text-health">I took one step today.</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-page" id="action-community">
+  <div class="action-header">
+    <button class="action-close" onclick="closeAction()">← Back</button>
+    <span class="action-header-title">We Are Still Building</span>
+  </div>
+  <div class="action-body">
+    <div class="action-meta">
+      <p>This page is intentionally simple.<br><br>
+      If you're here, you're not looking for inspiration.<br>
+      <strong>You're looking to do something.</strong><br><br>
+      So here are places to start.</p>
+    </div>
+    <h2 class="action-category-title">Community<br>Support</h2>
+    <ul class="action-list">
+      <li class="action-item">
+        <span class="action-item-name">Feeding America</span>
+        <span class="action-item-what">Find your local food bank. Volunteer or donate. Hunger is local.</span>
+        <a href="https://www.feedingamerica.org/find-your-local-foodbank" target="_blank" rel="noopener" class="action-item-link">Find your food bank →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Habitat for Humanity</span>
+        <span class="action-item-what">Build homes for families in need. No experience required. Show up ready to work.</span>
+        <a href="https://www.habitat.org/volunteer" target="_blank" rel="noopener" class="action-item-link">Volunteer to build →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Local Shelters</span>
+        <span class="action-item-what">Homeless shelters always need volunteers. Serve a meal. Sort donations. Be there.</span>
+        <a href="#" class="action-item-link coming-soon">Find local opportunities — coming soon</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">VolunteerMatch</span>
+        <span class="action-item-what">Search thousands of volunteer opportunities in your area by interest and availability.</span>
+        <a href="https://www.volunteermatch.org" target="_blank" rel="noopener" class="action-item-link">Find your match →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Nextdoor Community</span>
+        <span class="action-item-what">Start local. Offer to help a neighbor. Post in your community. Small acts compound.</span>
+        <a href="https://nextdoor.com" target="_blank" rel="noopener" class="action-item-link">Start local →</a>
+      </li>
+    </ul>
+    <div class="action-tracker" id="tracker-community">
+      <div class="tracker-check" id="check-community" onclick="toggleCheck('community')"></div>
+      <span class="tracker-text" id="tracker-text-community">I took one step today.</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-page" id="action-sports">
+  <div class="action-header">
+    <button class="action-close" onclick="closeAction()">← Back</button>
+    <span class="action-header-title">We Are Still Building</span>
+  </div>
+  <div class="action-body">
+    <div class="action-meta">
+      <p>This page is intentionally simple.<br><br>
+      If you're here, you're not looking for inspiration.<br>
+      <strong>You're looking to do something.</strong><br><br>
+      So here are places to start.</p>
+    </div>
+    <h2 class="action-category-title">Youth &amp;<br>Sports</h2>
+    <ul class="action-list">
+      <li class="action-item">
+        <span class="action-item-name">Ice skating scholarships</span>
+        <span class="action-item-what">Support a young skater who can't afford ice time, gear, or coaching. This one's personal to us.</span>
+        <a href="#" class="action-item-link coming-soon">Relentless scholarship — coming soon</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">US Figure Skating Outreach</span>
+        <span class="action-item-what">Support programs that bring skating to underserved communities.</span>
+        <a href="https://www.usfigureskating.org/skate/skating-opportunities" target="_blank" rel="noopener" class="action-item-link">Learn more →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Coach or Volunteer</span>
+        <span class="action-item-what">Local youth leagues, rec centers, and clubs need coaches and volunteers. You have something to give.</span>
+        <a href="#" class="action-item-link coming-soon">Find local opportunities — coming soon</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Athletes in Action</span>
+        <span class="action-item-what">Using sport to build character and community. Volunteer, donate, or get involved.</span>
+        <a href="https://athletesinaction.org" target="_blank" rel="noopener" class="action-item-link">Get involved →</a>
+      </li>
+      <li class="action-item">
+        <span class="action-item-name">Relentless Outreach</span>
+        <span class="action-item-what">Our own community initiatives — sponsorships, clinics, programs. Watch this space.</span>
+        <a href="#" class="action-item-link coming-soon">Coming soon →</a>
+      </li>
+    </ul>
+    <div class="action-tracker" id="tracker-sports">
+      <div class="tracker-check" id="check-sports" onclick="toggleCheck('sports')"></div>
+      <span class="tracker-text" id="tracker-text-sports">I took one step today.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+
+// Open action page
+function openAction(id) {
+  document.getElementById('action-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// Close action page
+function closeAction() {
+  document.querySelectorAll('.action-page').forEach(p => p.classList.remove('open'));
+  document.body.style.overflow = '';
+}
+
+// Symbolic checkbox tracker — no login, no tracking, just intention
+function toggleCheck(id) {
+  const check = document.getElementById('check-' + id);
+  const text = document.getElementById('tracker-text-' + id);
+  const isChecked = check.classList.toggle('checked');
+  text.textContent = isChecked ? 'Done something? Keep going.' : 'I took one step today.';
+  text.classList.toggle('checked-text', isChecked);
+}
+
+// Keyboard close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAction();
+});
+
+// Category card scroll reveal
+const obs = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) {
+    e.target.style.opacity = '1';
+    e.target.style.transform = 'translateY(0)';
+  }
+}), { threshold: 0.1 });
+
+document.querySelectorAll('.category-card').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = `opacity 0.9s ease ${i * 0.12}s, transform 0.9s ease ${i * 0.12}s`;
+  obs.observe(el);
+});
+</script>
+
+</body>
+</html>
