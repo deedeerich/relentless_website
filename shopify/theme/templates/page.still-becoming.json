@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-still-becoming",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

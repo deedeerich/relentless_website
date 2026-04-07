@@ -1,9 +1,19 @@
 {
-  "general": {
+  "accessibility": {
+    "main_navigation": "Main navigation",
+    "menu_toggle": "Toggle menu",
+    "close": "Close",
+    "close_cart": "Close cart",
     "skip_to_content": "Skip to content",
-    "newsletter_signup": "Sign up for our newsletter",
-    "cookie_accept": "Accept",
-    "loading": "Loading..."
+    "scroll_hint": "Scroll to explore",
+    "external_link": "Opens in a new window"
+  },
+  "header": {
+    "nav_becoming": "Still Becoming",
+    "nav_building": "Still Building",
+    "nav_philosophy": "The Philosophy",
+    "nav_shop": "Be Relentless",
+    "shop_cta": "Shop The Movement"
   },
   "navigation": {
     "becoming": "You Are Still Becoming",
@@ -15,6 +25,26 @@
     "account": "Account",
     "search": "Search"
   },
+  "footer": {
+    "explore": "Explore",
+    "community": "Community",
+    "connect": "Connect",
+    "submit_story": "Submit Your Story",
+    "ambassadors": "Ambassadors",
+    "outreach": "Relentless Outreach",
+    "newsletter": "Newsletter",
+    "email_us": "Email Us",
+    "copyright": "© {{ year }} Relentless — A DBA of Edges & Dreams. All rights reserved."
+  },
+  "forms": {
+    "email_label": "Email address",
+    "email_placeholder": "your@email.com",
+    "submit": "Submit",
+    "notify_me": "Notify Me",
+    "success_waitlist": "You're on the list. ✓",
+    "error_invalid_email": "Please enter a valid email address.",
+    "error_generic": "Something went wrong. Please try again."
+  },
   "newsletter": {
     "heading": "Join the Movement",
     "placeholder": "Enter your email",
@@ -23,15 +53,34 @@
     "consent_error": "Please agree to receive emails before subscribing.",
     "success": "Welcome to the movement. Check your email to confirm."
   },
-  "accessibility": {
-    "menu_toggle": "Menu",
-    "close": "Close",
-    "external_link": "Opens in a new window"
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty.",
+    "continue_shopping": "Start Shopping →",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "remove": "Remove"
   },
   "shop": {
     "add_to_cart": "Add to Cart",
     "sold_out": "Sold Out",
     "coming_soon": "Coming Soon",
     "drop_live": "DROP IS LIVE"
+  },
+  "cookie_consent": {
+    "title": "Cookie consent",
+    "message": "We use cookies to improve your experience and for analytics.",
+    "privacy_link": "Privacy Policy",
+    "ccpa_prefix": "California residents:",
+    "ccpa_link": "Do Not Sell My Personal Information",
+    "accept": "Accept",
+    "learn_more": "Learn More"
+  },
+  "announcement": {
+    "default_text": "Nothing Is Finished. Join the Movement."
+  },
+  "general": {
+    "skip_to_content": "Skip to content",
+    "loading": "Loading..."
   }
 }

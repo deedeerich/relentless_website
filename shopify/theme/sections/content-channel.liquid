@@ -1,0 +1,118 @@
+{% comment %}
+  content-channel.liquid
+  "You Are Still Becoming" — YouTube channel embed + story submission CTA.
+  YouTube first (per Stephen call), Instagram Phase 2.
+{% endcomment %}
+
+<section class="content-section" id="becoming">
+  <div class="content-inner">
+
+    <div class="section-eyebrow" aria-hidden="true">
+      <div class="gold-rule"></div>
+      {{ section.settings.eyebrow | default: 'You Are Still Becoming' }}
+      <div class="gold-rule"></div>
+    </div>
+
+    <div class="content-header">
+      <div class="content-text">
+        <h2>THE <em>RELENTLESS</em><br>CHANNEL</h2>
+        <p>{{ section.settings.channel_description | default: 'Original content built around one idea: you are not done yet. Athlete stories, growth mindset sessions, behind-the-scenes discipline, and the unfinished work of becoming.' }}</p>
+        <p>{{ section.settings.channel_description_2 | default: 'This is not a curated feed of other people&rsquo;s videos. This is a community showing their own pursuit — raw, real, and relentless.' }}</p>
+      </div>
+
+      {%- comment -%} YouTube embed or placeholder {%- endcomment -%}
+      <div class="yt-placeholder" aria-label="Relentless YouTube Channel">
+        {% if settings.youtube_channel_id != blank %}
+          <iframe
+            src="https://www.youtube.com/embed?listType=uploads&list={{ settings.youtube_channel_id }}"
+            title="Relentless Channel"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none">
+          </iframe>
+        {% else %}
+          <div class="yt-play" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(200,146,42,0.9)"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="yt-label">Relentless Channel &mdash; Coming Soon</span>
+        {% endif %}
+      </div>
+    </div>
+
+    {%- comment -%} Story submission box {%- endcomment -%}
+    <div class="submit-box">
+      <blockquote>
+        Nothing is <span style="font-style:normal;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.85em;letter-spacing:0.05em">!nished.</span><br><br>
+        Show us your pursuit.<br>
+        Your goals. Your grind.<br><br>
+        <strong>Be relentless.</strong><br><br>
+        Send your work.<br>
+        We'll share it with the Relentless community.
+      </blockquote>
+
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+        {% if settings.social_youtube != blank %}
+          <a href="{{ settings.social_youtube }}"
+             class="submit-btn"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Submit on YouTube">
+            YouTube
+          </a>
+        {% endif %}
+        {% if settings.social_instagram != blank %}
+          <a href="{{ settings.social_instagram }}"
+             class="submit-btn"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Submit on Instagram">
+            @relentlessperforma
+          </a>
+        {% endif %}
+        {% if section.settings.submit_email != blank %}
+          <a href="mailto:{{ section.settings.submit_email }}" class="submit-btn">Email Us</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Content Channel",
+  "tag": "div",
+  "class": "content-channel-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "You Are Still Becoming"
+    },
+    {
+      "type": "textarea",
+      "id": "channel_description",
+      "label": "Channel description (paragraph 1)",
+      "default": "Original content built around one idea: you are not done yet. Athlete stories, growth mindset sessions, behind-the-scenes discipline, and the unfinished work of becoming."
+    },
+    {
+      "type": "textarea",
+      "id": "channel_description_2",
+      "label": "Channel description (paragraph 2)",
+      "default": "This is not a curated feed of other people's videos. This is a community showing their own pursuit — raw, real, and relentless."
+    },
+    {
+      "type": "text",
+      "id": "submit_email",
+      "label": "Submission email address"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content Channel"
+    }
+  ]
+}
+{% endschema %}

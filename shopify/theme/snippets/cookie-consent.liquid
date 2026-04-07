@@ -1,6 +1,6 @@
 {%- comment -%}
   Cookie Consent Banner — GDPR / CCPA compliance.
-  Shows on first visit. Acceptance stored in localStorage via theme.js.
+  Shows on first visit. Acceptance stored in localStorage via relentless.js.
   Controlled by theme setting: show_cookie_consent.
 {%- endcomment -%}
 
@@ -8,18 +8,30 @@
 <div id="cookie-consent-banner"
      class="cookie-consent"
      role="dialog"
-     aria-label="Cookie consent"
+     aria-label="{{ 'cookie_consent.title' | t | default: 'Cookie consent' }}"
      aria-describedby="cookie-consent-message"
      hidden>
-  <div class="container cookie-consent__inner">
+  <div class="cookie-consent__inner">
     <p id="cookie-consent-message">
-      We use cookies to improve your experience and for analytics.
-      See our <a href="{{ settings.privacy_policy_url }}">Privacy Policy</a> for details.
-      {% if settings.show_ccpa_notice %}
-        California residents: <a href="{{ settings.privacy_policy_url }}#ccpa">Do Not Sell My Personal Information</a>.
+      {{ 'cookie_consent.message' | t | default: 'We use cookies to improve your experience and for analytics.' }}
+      {% if settings.privacy_policy_url != blank %}
+        <a href="{{ settings.privacy_policy_url }}">{{ 'cookie_consent.privacy_link' | t | default: 'Privacy Policy' }}</a>
+      {% endif %}
+      {% if settings.show_ccpa_notice and settings.privacy_policy_url != blank %}
+        <br>{{ 'cookie_consent.ccpa_prefix' | t | default: 'California residents:' }}
+        <a href="{{ settings.privacy_policy_url }}#ccpa">{{ 'cookie_consent.ccpa_link' | t | default: 'Do Not Sell My Personal Information' }}</a>
       {% endif %}
     </p>
-    <button class="btn btn-primary" data-cookie-accept>Accept</button>
+    <div class="cookie-consent__actions">
+      <button class="cookie-consent__accept" data-cookie-accept>
+        {{ 'cookie_consent.accept' | t | default: 'Accept' }}
+      </button>
+      {% if settings.privacy_policy_url != blank %}
+        <a href="{{ settings.privacy_policy_url }}" class="cookie-consent__learn-more">
+          {{ 'cookie_consent.learn_more' | t | default: 'Learn More' }}
+        </a>
+      {% endif %}
+    </div>
   </div>
 </div>
 {% endif %}

@@ -13,7 +13,12 @@
       {
         "type": "image_picker",
         "id": "logo",
-        "label": "Logo"
+        "label": "Logo (dark background)"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_light",
+        "label": "Logo (light background / inverted)"
       },
       {
         "type": "image_picker",
@@ -33,50 +38,27 @@
     "settings": [
       {
         "type": "color",
-        "id": "color_primary",
-        "label": "Primary (Black)",
-        "default": "#000000"
+        "id": "color_dark",
+        "label": "Dark (warm black)",
+        "default": "#050403"
       },
       {
         "type": "color",
-        "id": "color_secondary",
-        "label": "Secondary (White)",
-        "default": "#FFFFFF"
+        "id": "color_white",
+        "label": "Warm white",
+        "default": "#f5f0e8"
       },
       {
         "type": "color",
-        "id": "color_accent",
-        "label": "Accent (Gold)",
-        "default": "#C5A55A"
+        "id": "color_gold",
+        "label": "Gold accent",
+        "default": "#D4982E"
       },
       {
         "type": "color",
-        "id": "color_background",
-        "label": "Background",
-        "default": "#000000"
-      },
-      {
-        "type": "color",
-        "id": "color_text",
-        "label": "Text",
-        "default": "#FFFFFF"
-      }
-    ]
-  },
-  {
-    "name": "Typography",
-    "settings": [
-      {
-        "type": "font_picker",
-        "id": "font_heading",
-        "label": "Heading font",
-        "default": "montserrat_n7"
-      },
-      {
-        "type": "font_picker",
-        "id": "font_body",
-        "label": "Body font",
-        "default": "montserrat_n4"
+        "id": "color_gold_light",
+        "label": "Gold light",
+        "default": "#e8b54a"
       }
     ]
   },
@@ -86,17 +68,20 @@
       {
         "type": "url",
         "id": "social_youtube",
-        "label": "YouTube URL"
+        "label": "YouTube URL",
+        "default": "https://www.youtube.com/@relentlessperforma"
       },
       {
         "type": "url",
         "id": "social_instagram",
-        "label": "Instagram URL"
+        "label": "Instagram URL",
+        "default": "https://www.instagram.com/relentlessperforma"
       },
       {
-        "type": "url",
-        "id": "social_facebook",
-        "label": "Facebook URL"
+        "type": "text",
+        "id": "youtube_channel_id",
+        "label": "YouTube Channel ID",
+        "info": "Used for channel embed (e.g. UCxxxxxxxxxx)"
       }
     ]
   },
@@ -108,6 +93,12 @@
         "id": "klaviyo_public_key",
         "label": "Klaviyo public API key",
         "info": "Found in Klaviyo > Account > Settings > API Keys"
+      },
+      {
+        "type": "text",
+        "id": "klaviyo_waitlist_list_id",
+        "label": "Klaviyo waitlist list ID",
+        "info": "List ID for the shop drop waitlist"
       }
     ]
   },
@@ -128,6 +119,11 @@
         "type": "url",
         "id": "community_guidelines_url",
         "label": "Community Guidelines URL"
+      },
+      {
+        "type": "url",
+        "id": "accessibility_url",
+        "label": "Accessibility Statement URL"
       },
       {
         "type": "checkbox",

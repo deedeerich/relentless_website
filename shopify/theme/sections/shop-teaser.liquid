@@ -1,0 +1,106 @@
+{% comment %}
+  shop-teaser.liquid
+  Coming soon / waitlist section — drop badge, "WEAR THE MINDSET", Klaviyo email capture.
+{% endcomment %}
+
+<section class="shop-teaser" id="shop">
+  <div class="shop-teaser-inner">
+
+    <div class="section-eyebrow" aria-hidden="true">
+      <div class="gold-rule"></div>
+      {{ section.settings.eyebrow | default: 'Be Relentless' }}
+      <div class="gold-rule"></div>
+    </div>
+
+    <div class="drop-badge" aria-label="First drop coming soon">
+      ⚡ {{ section.settings.badge_text | default: 'First Drop — Coming Soon' }}
+    </div>
+
+    <h2>{{ section.settings.heading_prefix | default: 'WEAR THE' }} <span class="accent">{{ section.settings.heading_accent | default: 'MINDSET.' }}</span></h2>
+    <p>{{ section.settings.description | default: 'Exclusive drops. One-of-one pieces. Gear for the never-stopper.' }}</p>
+
+    {%- comment -%} Klaviyo waitlist form — reuses snippet if available {%- endcomment -%}
+    {% render 'klaviyo-form',
+      list_id: settings.klaviyo_waitlist_list_id,
+      placeholder_text: section.settings.form_placeholder,
+      button_text: section.settings.form_button,
+      success_message: section.settings.form_success
+    %}
+
+    <p class="waitlist-note">{{ section.settings.form_note | default: 'First access to every drop. No spam. Unsubscribe anytime.' }}</p>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop Teaser",
+  "tag": "div",
+  "class": "shop-teaser-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Be Relentless"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Drop badge text",
+      "default": "First Drop — Coming Soon"
+    },
+    {
+      "type": "text",
+      "id": "heading_prefix",
+      "label": "Heading prefix",
+      "default": "WEAR THE"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent word",
+      "default": "MINDSET."
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Exclusive drops. One-of-one pieces. Gear for the never-stopper."
+    },
+    {
+      "type": "header",
+      "content": "Waitlist Form"
+    },
+    {
+      "type": "text",
+      "id": "form_placeholder",
+      "label": "Email placeholder",
+      "default": "your@email.com"
+    },
+    {
+      "type": "text",
+      "id": "form_button",
+      "label": "Button text",
+      "default": "Notify Me"
+    },
+    {
+      "type": "text",
+      "id": "form_success",
+      "label": "Success message",
+      "default": "You're on the list. ✓"
+    },
+    {
+      "type": "text",
+      "id": "form_note",
+      "label": "Note below form",
+      "default": "First access to every drop. No spam. Unsubscribe anytime."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop Teaser"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,257 @@
+{% comment %}
+  hero-cosmos.liquid
+  The full homepage hero section.
+  Cosmos canvas, constellation SVG, bloom cards, mantra, CTA.
+  JS lives in assets/relentless.js
+  CSS lives in assets/relentless.css
+{% endcomment %}
+
+<section class="hero" id="home" aria-label="Relentless hero">
+
+  {%- comment -%} Starfield canvas — decorative, hidden from screen readers {%- endcomment -%}
+  <canvas id="starfield" aria-hidden="true" role="presentation"></canvas>
+
+  {%- comment -%} Hero background gradient layer {%- endcomment -%}
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  {%- comment -%} Constellation SVG overlay {%- endcomment -%}
+  <svg class="constellation" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice"
+       xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+    <g stroke="rgba(210,160,50,0.28)" stroke-width="0.7" fill="none">
+      <line x1="60" y1="220" x2="180" y2="310"/>
+      <line x1="180" y1="310" x2="140" y2="460"/>
+      <line x1="140" y1="460" x2="280" y2="540"/>
+      <line x1="280" y1="540" x2="240" y2="680"/>
+      <line x1="60" y1="220" x2="120" y2="100"/>
+      <line x1="180" y1="310" x2="300" y2="280"/>
+      <line x1="300" y1="280" x2="380" y2="340"/>
+      <line x1="140" y1="460" x2="80" y2="560"/>
+      <line x1="1180" y1="140" x2="1310" y2="260"/>
+      <line x1="1310" y1="260" x2="1270" y2="400"/>
+      <line x1="1270" y1="400" x2="1370" y2="500"/>
+      <line x1="1180" y1="140" x2="1090" y2="70"/>
+      <line x1="1310" y1="260" x2="1400" y2="210"/>
+      <line x1="1270" y1="400" x2="1380" y2="440"/>
+      <line x1="640" y1="40" x2="720" y2="120" stroke="rgba(210,160,50,0.12)"/>
+      <line x1="720" y1="120" x2="820" y2="80" stroke="rgba(210,160,50,0.12)"/>
+    </g>
+    <g fill="rgba(225,175,75,0.7)">
+      <circle cx="60" cy="220" r="2.5"/><circle cx="180" cy="310" r="2.2"/>
+      <circle cx="140" cy="460" r="2"/><circle cx="280" cy="540" r="1.8"/>
+      <circle cx="240" cy="680" r="1.5"/><circle cx="120" cy="100" r="1.8"/>
+      <circle cx="300" cy="280" r="1.6"/><circle cx="380" cy="340" r="1.4"/>
+      <circle cx="80" cy="560" r="1.5"/><circle cx="1180" cy="140" r="2.5"/>
+      <circle cx="1310" cy="260" r="2"/><circle cx="1270" cy="400" r="1.8"/>
+      <circle cx="1370" cy="500" r="1.6"/><circle cx="1090" cy="70" r="1.8"/>
+      <circle cx="1400" cy="210" r="1.4"/><circle cx="1380" cy="440" r="1.5"/>
+    </g>
+    <g>
+      <circle cx="1355" cy="78" r="3.5" fill="rgba(255,220,130,0.9)">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <line x1="1355" y1="58" x2="1355" y2="98" stroke="rgba(240,200,100,0.25)" stroke-width="0.8"/>
+      <line x1="1335" y1="78" x2="1375" y2="78" stroke="rgba(240,200,100,0.25)" stroke-width="0.8"/>
+      <circle cx="95" cy="660" r="3" fill="rgba(240,200,110,0.85)">
+        <animate attributeName="opacity" values="0.4;0.9;0.4" dur="4.8s" repeatCount="indefinite"/>
+      </circle>
+      <line x1="95" y1="645" x2="95" y2="675" stroke="rgba(230,190,90,0.2)" stroke-width="0.8"/>
+      <line x1="80" y1="660" x2="110" y2="660" stroke="rgba(230,190,90,0.2)" stroke-width="0.8"/>
+    </g>
+  </svg>
+
+  {%- comment -%} Hero content lockup {%- endcomment -%}
+  <div class="hero-lockup">
+
+    {%- comment -%} Logo / title block {%- endcomment -%}
+    <div class="hero-logo-wrap">
+      <div class="hero-title-block">
+        <div class="hero-title-main" aria-label="Nothing is Finished">
+          <span class="ht-nothing" aria-hidden="true">NOTHING</span>
+          <span class="ht-is" aria-hidden="true">is</span>
+          <span class="ht-finished" aria-hidden="true">FINISHED</span>
+        </div>
+        <div class="hero-title-sub-row" aria-hidden="true">
+          <div class="gold-rule-long"></div>
+          <span class="hero-relentless">RELENTLESS</span>
+          <div class="gold-rule-long"></div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%}
+      Bloom cards — each line IS the navigation card.
+      Hover/tap expands to reveal destination description and CTA.
+      On desktop: CSS :hover handles expansion.
+      On mobile: JS adds .tapped class on first tap, navigates on second tap.
+      URLs point to Shopify page handles — update after pages are created.
+    {%- endcomment -%}
+    <nav class="hero-pillars" aria-label="Main navigation">
+
+      <a href="{{ pages['still-becoming'].url | default: '/pages/still-becoming' }}"
+         class="bloom-card"
+         id="bloom-becoming"
+         aria-label="You Are Still Becoming — Mindset, Growth, Perspective">
+        <div class="bloom-resting" aria-hidden="true">
+          <span class="bloom-line">You are still becoming.</span>
+        </div>
+        <div class="bloom-expanded">
+          <span class="bloom-expanded-title">You are still becoming.</span>
+          <span class="bloom-expanded-sub">Mindset · Growth · Perspective</span>
+          <p class="bloom-expanded-desc">{{ section.settings.becoming_desc | default: 'A space built for the pursuit of who you are becoming. Athlete stories, daily mindset prompts, and the ideas that keep you moving forward. You belong here.' }}</p>
+          <span class="bloom-expanded-cta" aria-hidden="true">Enter →</span>
+        </div>
+      </a>
+
+      <a href="{{ pages['still-building'].url | default: '/pages/still-building' }}"
+         class="bloom-card"
+         id="bloom-building"
+         aria-label="We Are Still Building — Community, Impact, Purpose">
+        <div class="bloom-resting" aria-hidden="true">
+          <span class="bloom-line">We are still building.</span>
+        </div>
+        <div class="bloom-expanded">
+          <span class="bloom-expanded-title">We are still building.</span>
+          <span class="bloom-expanded-sub">Community · Impact · Purpose</span>
+          <p class="bloom-expanded-desc">{{ section.settings.building_desc | default: 'We believe in showing up for each other. Mentorship, community work, programs that help athletes grow. This is where Relentless becomes something bigger than a brand.' }}</p>
+          <span class="bloom-expanded-cta" aria-hidden="true">Enter →</span>
+        </div>
+      </a>
+
+      <a href="{{ pages['philosophy'].url | default: '/pages/philosophy' }}"
+         class="bloom-card"
+         id="bloom-philosophy"
+         aria-label="Nothing Is Finished — The Relentless Philosophy">
+        <div class="bloom-resting" aria-hidden="true">
+          <span class="bloom-line">Nothing is finished.</span>
+        </div>
+        <div class="bloom-expanded">
+          <span class="bloom-expanded-title">Nothing is finished.</span>
+          <span class="bloom-expanded-sub">Why the pursuit never ends.</span>
+          <p class="bloom-expanded-desc">{{ section.settings.philosophy_desc | default: 'What does it mean that nothing is ever truly finished? The story, the belief, and the reason the pursuit never ends. Come find out why it resonates.' }}</p>
+          <span class="bloom-expanded-cta" aria-hidden="true">Enter →</span>
+        </div>
+      </a>
+
+      <a href="{{ routes.collections_url }}/shop"
+         class="bloom-card bloom-card--gold"
+         id="bloom-shop"
+         aria-label="Be Relentless — Shop the Movement">
+        <div class="bloom-resting" aria-hidden="true">
+          <span class="bloom-line bloom-line--gold">Be relentless.</span>
+        </div>
+        <div class="bloom-expanded">
+          <span class="bloom-expanded-title bloom-expanded-title--gold">Be relentless.</span>
+          <span class="bloom-expanded-sub">Wear the mindset.</span>
+          <p class="bloom-expanded-desc">{{ section.settings.shop_desc | default: 'Exclusive 1-of-1 drops, limited releases, and gear made for the people who refuse to stop. Every piece means something.' }}</p>
+          <span class="bloom-expanded-cta" aria-hidden="true">Shop →</span>
+        </div>
+      </a>
+
+    </nav>
+
+    {%- comment -%} Rotating mantra — JS populates this {%- endcomment -%}
+    <p class="hero-mantra" id="heroMantra" aria-live="polite" aria-atomic="true"></p>
+
+    {%- comment -%} Static tagline {%- endcomment -%}
+    <p class="hero-tagline-static">
+      {{- section.settings.tagline | default: 'The work is not finished. Neither are you.' -}}
+    </p>
+
+    {%- comment -%} CTAs {%- endcomment -%}
+    <div class="hero-cta-wrap">
+      <a href="{{ section.settings.cta_url | default: '#becoming' }}"
+         class="hero-cta">
+        {{- section.settings.cta_text | default: 'Enter the Movement' -}}
+      </a>
+      <a href="{{ routes.root_url }}#shop" class="hero-join">
+        Join the movement ↓
+      </a>
+    </div>
+
+  </div>
+
+  {%- comment -%} Scroll hint {%- endcomment -%}
+  <div class="scroll-hint" aria-hidden="true">
+    <span>Explore</span>
+    <div class="scroll-arrow"></div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Hero Cosmos",
+  "tag": "section",
+  "class": "hero-cosmos-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Enter the Movement"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "header",
+      "content": "Tagline"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Static tagline below mantras",
+      "default": "The work is not finished. Neither are you."
+    },
+    {
+      "type": "header",
+      "content": "Bloom Card Descriptions"
+    },
+    {
+      "type": "textarea",
+      "id": "becoming_desc",
+      "label": "You Are Still Becoming — description",
+      "default": "A space built for the pursuit of who you are becoming. Athlete stories, daily mindset prompts, and the ideas that keep you moving forward. You belong here."
+    },
+    {
+      "type": "textarea",
+      "id": "building_desc",
+      "label": "We Are Still Building — description",
+      "default": "We believe in showing up for each other. Mentorship, community work, programs that help athletes grow. This is where Relentless becomes something bigger than a brand."
+    },
+    {
+      "type": "textarea",
+      "id": "philosophy_desc",
+      "label": "Nothing Is Finished — description",
+      "default": "What does it mean that nothing is ever truly finished? The story, the belief, and the reason the pursuit never ends. Come find out why it resonates."
+    },
+    {
+      "type": "textarea",
+      "id": "shop_desc",
+      "label": "Be Relentless — description",
+      "default": "Exclusive 1-of-1 drops, limited releases, and gear made for the people who refuse to stop. Every piece means something."
+    },
+    {
+      "type": "header",
+      "content": "Display Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_hint",
+      "label": "Show scroll hint arrow",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Cosmos"
+    }
+  ]
+}
+{% endschema %}

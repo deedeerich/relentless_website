@@ -8,8 +8,27 @@ permissions:
   contents: read
 
 jobs:
+  theme-check:
+    name: Pre-Deploy Theme Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install theme-check
+        run: gem install theme-check
+
+      - name: Run theme check
+        run: |
+          cd shopify/theme
+          theme-check --fail-level error
+
   deploy-staging:
     name: Deploy to Staging
+    needs: theme-check
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     environment: staging
@@ -25,13 +44,14 @@ jobs:
 
       - name: Push theme to staging
         env:
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
-          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE_URL }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_STAGING_TOKEN }}
+          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STAGING_STORE_URL }}
         run: |
           shopify theme push --path shopify/theme --unpublished
 
   deploy-production:
     name: Deploy to Production
+    needs: theme-check
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
@@ -47,7 +67,7 @@ jobs:
 
       - name: Push theme to production
         env:
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
-          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE_URL }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_PRODUCTION_TOKEN }}
+          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_PRODUCTION_STORE_URL }}
         run: |
           shopify theme push --path shopify/theme

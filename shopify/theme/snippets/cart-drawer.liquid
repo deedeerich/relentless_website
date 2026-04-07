@@ -1,0 +1,75 @@
+{% comment %}
+  cart-drawer.liquid
+  Slide-out cart panel — triggered by cart icon in header.
+  Uses Shopify AJAX Cart API via relentless.js.
+{% endcomment %}
+
+<div id="cart-drawer"
+     class="cart-drawer"
+     role="dialog"
+     aria-label="{{ 'cart.title' | t | default: 'Shopping cart' }}"
+     aria-modal="true"
+     aria-hidden="true">
+
+  <div class="cart-drawer-overlay" data-cart-close></div>
+
+  <div class="cart-drawer-panel">
+    <div class="cart-drawer-header">
+      <h2>{{ 'cart.title' | t | default: 'Your Cart' }}</h2>
+      <button class="cart-drawer-close"
+              data-cart-close
+              aria-label="{{ 'accessibility.close_cart' | t | default: 'Close cart' }}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="cart-drawer-body" id="cart-drawer-items">
+      {%- comment -%} Cart items populated by JS via AJAX Cart API {%- endcomment -%}
+      {% if cart.item_count > 0 %}
+        {% for item in cart.items %}
+          <div class="cart-item" data-cart-item data-variant-id="{{ item.variant_id }}">
+            {% if item.image != blank %}
+              <img src="{{ item.image | image_url: width: 120 }}"
+                   alt="{{ item.title | escape }}"
+                   width="60" height="60"
+                   loading="lazy" />
+            {% endif %}
+            <div class="cart-item-details">
+              <p class="cart-item-title">{{ item.title }}</p>
+              {% unless item.variant_title == 'Default Title' %}
+                <p class="cart-item-variant">{{ item.variant_title }}</p>
+              {% endunless %}
+              <p class="cart-item-price">{{ item.final_line_price | money }}</p>
+            </div>
+            <div class="cart-item-qty">
+              <button data-qty-minus aria-label="Decrease quantity">−</button>
+              <span>{{ item.quantity }}</span>
+              <button data-qty-plus aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="cart-empty">
+          <p>{{ 'cart.empty' | t | default: 'Your cart is empty.' }}</p>
+          <a href="{{ routes.collections_url }}/all" class="cart-empty-cta">
+            {{ 'cart.continue_shopping' | t | default: 'Start Shopping →' }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <div class="cart-drawer-footer">
+        <div class="cart-subtotal">
+          <span>{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span>
+          <span id="cart-subtotal-price">{{ cart.total_price | money }}</span>
+        </div>
+        <a href="{{ routes.cart_url }}/checkout" class="cart-checkout-btn">
+          {{ 'cart.checkout' | t | default: 'Checkout' }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>

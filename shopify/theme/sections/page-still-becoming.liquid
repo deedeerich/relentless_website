@@ -1,0 +1,146 @@
+{% comment %}
+  page-still-becoming.liquid
+  "You Are Still Becoming" — mindset feed page.
+  Scaffold at launch — content populates via Shopify blog posts tagged "mindset-feed".
+{% endcomment %}
+
+<div class="page-still-becoming">
+
+  {%- comment -%} Page hero {%- endcomment -%}
+  <section class="page-hero" id="becoming-hero">
+    <div class="hero-eyebrow" aria-hidden="true">
+      <div class="gold-rule"></div>
+      You Are Still Becoming
+      <div class="gold-rule"></div>
+    </div>
+    <h1 class="hero-title">{{ section.settings.hero_title | default: 'The pursuit of who you are becoming.' }}</h1>
+    <p class="hero-sub">Mindset &middot; Growth &middot; Perspective</p>
+  </section>
+
+  <div class="shift-line" aria-hidden="true"></div>
+
+  {%- comment -%} Feed header {%- endcomment -%}
+  <section class="feed-section">
+    <div class="feed-inner">
+      <div class="feed-intro">
+        <p>{{ section.settings.feed_intro | default: 'Athlete stories, growth mindset sessions, daily prompts, and the unfinished work of becoming. This is a space for the pursuit.' }}</p>
+      </div>
+
+      {%- comment -%} Blog post cards — pulls from blog tagged "mindset-feed" {%- endcomment -%}
+      {% assign feed_blog = blogs['mindset-feed'] | default: blogs['news'] %}
+
+      {% if feed_blog and feed_blog.articles_count > 0 %}
+        <div class="feed-grid">
+          {% for article in feed_blog.articles limit: 12 %}
+            <article class="feed-card scroll-reveal">
+              {% if article.image %}
+                <a href="{{ article.url }}" class="feed-card-image">
+                  {{ article.image | image_url: width: 600 | image_tag: alt: article.title, loading: 'lazy' }}
+                </a>
+              {% endif %}
+              <div class="feed-card-content">
+                <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" class="feed-card-date">
+                  {{ article.published_at | date: '%B %d, %Y' }}
+                </time>
+                <h2 class="feed-card-title">
+                  <a href="{{ article.url }}">{{ article.title }}</a>
+                </h2>
+                <p class="feed-card-excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+                {% if article.author %}
+                  <span class="feed-card-author">{{ article.author }}</span>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if feed_blog.articles_count > 12 %}
+          <div class="feed-more">
+            <a href="{{ feed_blog.url }}" class="philosophy-cta">View All Posts →</a>
+          </div>
+        {% endif %}
+
+      {% else %}
+        {%- comment -%} Empty state — shown until blog content is created {%- endcomment -%}
+        <div class="feed-empty">
+          <div class="feed-empty-icon" aria-hidden="true">✦</div>
+          <h2>{{ section.settings.empty_title | default: 'Content is coming.' }}</h2>
+          <p>{{ section.settings.empty_text | default: 'We are building this space right now. Athlete stories, mindset prompts, and everything that fuels the pursuit. Check back soon.' }}</p>
+        </div>
+      {% endif %}
+
+      {%- comment -%} Submission CTA {%- endcomment -%}
+      <div class="feed-submit scroll-reveal">
+        <div class="submit-box">
+          <blockquote>
+            {{ section.settings.submit_quote | default: 'You have a story. A pursuit. A moment where you refused to stop. We want to hear it.' }}
+          </blockquote>
+          <a href="{{ section.settings.submit_url | default: '#' }}" class="submit-btn">
+            {{ section.settings.submit_cta | default: 'Share Your Story →' }}
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+{% schema %}
+{
+  "name": "Still Becoming Page",
+  "tag": "div",
+  "class": "page-still-becoming-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "The pursuit of who you are becoming."
+    },
+    {
+      "type": "textarea",
+      "id": "feed_intro",
+      "label": "Feed intro text",
+      "default": "Athlete stories, growth mindset sessions, daily prompts, and the unfinished work of becoming. This is a space for the pursuit."
+    },
+    {
+      "type": "header",
+      "content": "Empty State"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Empty state heading",
+      "default": "Content is coming."
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Empty state text",
+      "default": "We are building this space right now. Athlete stories, mindset prompts, and everything that fuels the pursuit. Check back soon."
+    },
+    {
+      "type": "header",
+      "content": "Story Submission"
+    },
+    {
+      "type": "textarea",
+      "id": "submit_quote",
+      "label": "Submission prompt",
+      "default": "You have a story. A pursuit. A moment where you refused to stop. We want to hear it."
+    },
+    {
+      "type": "text",
+      "id": "submit_cta",
+      "label": "Submit button text",
+      "default": "Share Your Story →"
+    },
+    {
+      "type": "url",
+      "id": "submit_url",
+      "label": "Submit URL"
+    }
+  ]
+}
+{% endschema %}

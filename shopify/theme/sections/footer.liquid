@@ -1,0 +1,119 @@
+{% comment %}
+  footer.liquid
+  Site footer — brand column, explore/community/connect links, legal bar.
+{% endcomment %}
+
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-top">
+
+      {%- comment -%} Brand column {%- endcomment -%}
+      <div class="footer-brand">
+        {% if settings.logo_light != blank %}
+          {{ settings.logo_light | image_url: width: 180 | image_tag: alt: shop.name, loading: 'lazy', class: 'footer-logo-img' }}
+        {% else %}
+          <div class="logo">RELENTLESS</div>
+          <div class="tagline">PERFORMA</div>
+        {% endif %}
+        <p>{{ section.settings.brand_description | default: 'A movement built on the ice and grown through every athlete who refused to stop. Every day. Every step. Every moment.' }}</p>
+      </div>
+
+      {%- comment -%} Explore column {%- endcomment -%}
+      <div class="footer-col">
+        <h4>{{ 'footer.explore' | t | default: 'Explore' }}</h4>
+        <ul>
+          <li><a href="{{ pages['still-becoming'].url | default: '/pages/still-becoming' }}">Still Becoming</a></li>
+          <li><a href="{{ pages['still-building'].url | default: '/pages/still-building' }}">Still Building</a></li>
+          <li><a href="{{ pages['philosophy'].url | default: '/pages/philosophy' }}">The Philosophy</a></li>
+          <li><a href="{{ routes.collections_url }}/all">Be Relentless</a></li>
+        </ul>
+      </div>
+
+      {%- comment -%} Community column {%- endcomment -%}
+      <div class="footer-col">
+        <h4>{{ 'footer.community' | t | default: 'Community' }}</h4>
+        <ul>
+          <li><a href="{{ section.settings.submit_story_url | default: '#' }}">Submit Your Story</a></li>
+          <li><a href="{{ section.settings.ambassadors_url | default: '#' }}">Ambassadors</a></li>
+          <li><a href="{{ section.settings.outreach_url | default: '#' }}">Relentless Outreach</a></li>
+          <li><a href="{{ section.settings.newsletter_url | default: '#' }}">Newsletter</a></li>
+        </ul>
+      </div>
+
+      {%- comment -%} Connect column {%- endcomment -%}
+      <div class="footer-col">
+        <h4>{{ 'footer.connect' | t | default: 'Connect' }}</h4>
+        <ul>
+          {% if settings.social_youtube != blank %}
+            <li><a href="{{ settings.social_youtube }}" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+          {% endif %}
+          {% if settings.social_instagram != blank %}
+            <li><a href="{{ settings.social_instagram }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          {% endif %}
+          <li><a href="mailto:{{ section.settings.contact_email | default: 'info@relentlessperforma.com' }}">Email Us</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {{ 'now' | date: '%Y' }} Relentless &mdash; A DBA of Edges &amp; Dreams. All rights reserved.</p>
+      <div class="footer-legal">
+        {% if settings.privacy_policy_url != blank %}
+          <a href="{{ settings.privacy_policy_url }}">Privacy Policy</a>
+        {% endif %}
+        {% if settings.terms_url != blank %}
+          <a href="{{ settings.terms_url }}">Terms of Service</a>
+        {% endif %}
+        {% if settings.community_guidelines_url != blank %}
+          <a href="{{ settings.community_guidelines_url }}">Community Guidelines</a>
+        {% endif %}
+        {% if settings.accessibility_url != blank %}
+          <a href="{{ settings.accessibility_url }}">Accessibility</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "div",
+  "class": "footer-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "brand_description",
+      "label": "Brand description",
+      "default": "A movement built on the ice and grown through every athlete who refused to stop. Every day. Every step. Every moment."
+    },
+    {
+      "type": "url",
+      "id": "submit_story_url",
+      "label": "Submit Your Story URL"
+    },
+    {
+      "type": "url",
+      "id": "ambassadors_url",
+      "label": "Ambassadors page URL"
+    },
+    {
+      "type": "url",
+      "id": "outreach_url",
+      "label": "Relentless Outreach URL"
+    },
+    {
+      "type": "url",
+      "id": "newsletter_url",
+      "label": "Newsletter signup URL"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "info@relentlessperforma.com"
+    }
+  ]
+}
+{% endschema %}

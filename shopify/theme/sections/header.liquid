@@ -1,0 +1,103 @@
+{% comment %}
+  header.liquid
+  Site navigation — logo, pillar links, social, shop CTA, mobile menu.
+  Scrolled state handled by relentless.js (adds .scrolled class on scroll > 60px).
+{% endcomment %}
+
+<header id="mainNav" role="banner">
+  <a href="{{ routes.root_url }}" class="nav-logo" aria-label="{{ shop.name }} — Home">
+    {% if settings.logo != blank %}
+      {{ settings.logo | image_url: width: 200 | image_tag: alt: shop.name, loading: 'eager', class: 'nav-logo-img' }}
+    {% else %}
+      <span class="logo-main">RELENTLESS</span><span class="logo-sub">PERFORMA</span>
+    {% endif %}
+  </a>
+
+  <nav aria-label="{{ 'accessibility.main_navigation' | t }}">
+    <ul class="nav-links">
+      <li><a href="{{ pages['still-becoming'].url | default: '/pages/still-becoming' }}">{{ section.settings.nav_becoming | default: 'Still Becoming' }}</a></li>
+      <li><a href="{{ pages['still-building'].url | default: '/pages/still-building' }}">{{ section.settings.nav_building | default: 'Still Building' }}</a></li>
+      <li><a href="{{ pages['philosophy'].url | default: '/pages/philosophy' }}">{{ section.settings.nav_philosophy | default: 'The Philosophy' }}</a></li>
+      <li><a href="{{ routes.collections_url }}/all">{{ section.settings.nav_shop | default: 'Be Relentless' }}</a></li>
+    </ul>
+  </nav>
+
+  <div class="nav-actions">
+    {% if settings.social_instagram != blank %}
+      <a href="{{ settings.social_instagram }}"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="nav-social"
+         aria-label="@relentlessperforma on Instagram">
+        @relentlessperforma
+      </a>
+    {% endif %}
+
+    <a href="{{ routes.collections_url }}/all" class="nav-cta">
+      {{ section.settings.cta_text | default: 'Shop The Movement' }}
+    </a>
+
+    {%- comment -%} Mobile hamburger — toggled by relentless.js {%- endcomment -%}
+    <button class="nav-hamburger"
+            aria-label="{{ 'accessibility.menu_toggle' | t | default: 'Toggle menu' }}"
+            aria-expanded="false"
+            aria-controls="mobile-nav">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  {%- comment -%} Mobile navigation panel {%- endcomment -%}
+  <div id="mobile-nav" class="mobile-nav" aria-hidden="true">
+    <ul>
+      <li><a href="{{ pages['still-becoming'].url | default: '/pages/still-becoming' }}">Still Becoming</a></li>
+      <li><a href="{{ pages['still-building'].url | default: '/pages/still-building' }}">Still Building</a></li>
+      <li><a href="{{ pages['philosophy'].url | default: '/pages/philosophy' }}">The Philosophy</a></li>
+      <li><a href="{{ routes.collections_url }}/all">Be Relentless</a></li>
+      {% if settings.social_instagram != blank %}
+        <li><a href="{{ settings.social_instagram }}" target="_blank" rel="noopener noreferrer">@relentlessperforma</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "div",
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "nav_becoming",
+      "label": "Nav link: Still Becoming",
+      "default": "Still Becoming"
+    },
+    {
+      "type": "text",
+      "id": "nav_building",
+      "label": "Nav link: Still Building",
+      "default": "Still Building"
+    },
+    {
+      "type": "text",
+      "id": "nav_philosophy",
+      "label": "Nav link: The Philosophy",
+      "default": "The Philosophy"
+    },
+    {
+      "type": "text",
+      "id": "nav_shop",
+      "label": "Nav link: Be Relentless",
+      "default": "Be Relentless"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA button text",
+      "default": "Shop The Movement"
+    }
+  ]
+}
+{% endschema %}

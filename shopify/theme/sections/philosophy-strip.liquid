@@ -1,0 +1,71 @@
+{% comment %}
+  philosophy-strip.liquid
+  Brief manifesto excerpt with link to full philosophy page.
+{% endcomment %}
+
+<section class="philosophy" id="philosophy-section">
+  <div class="philosophy-inner">
+    <div class="section-eyebrow" aria-hidden="true">
+      <div class="gold-rule"></div>
+      {{ section.settings.eyebrow | default: 'The Philosophy' }}
+      <div class="gold-rule"></div>
+    </div>
+
+    <h2>{{ section.settings.heading | default: 'Why the pursuit never ends.' }}</h2>
+
+    {% if section.settings.content != blank %}
+      {{ section.settings.content }}
+    {% else %}
+      <p>Relentless was built on a simple truth: the moment you believe you're finished &mdash; finished growing, finished learning, finished becoming &mdash; is the moment you stop. And stopping is a choice we refuse to make.</p>
+      <p>This isn't just a brand. It's a mindset that started on the ice and spread to every athlete, every coach, every person who ever pushed past what felt possible. You are still becoming. We are still building. Nothing is finished.</p>
+    {% endif %}
+
+    <a href="{{ section.settings.cta_url | default: pages['philosophy'].url | default: '/pages/philosophy' }}"
+       class="philosophy-cta">
+      {{ section.settings.cta_text | default: 'Read the Full Story →' }}
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Philosophy Strip",
+  "tag": "div",
+  "class": "philosophy-strip-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "The Philosophy"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why the pursuit never ends."
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Philosophy text"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Link text",
+      "default": "Read the Full Story →"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Link URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Philosophy Strip"
+    }
+  ]
+}
+{% endschema %}

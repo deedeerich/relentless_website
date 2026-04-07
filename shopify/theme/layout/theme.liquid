@@ -21,7 +21,7 @@
                  img-src 'self' https: data:;
                  font-src 'self' https://fonts.gstatic.com https://cdn.shopify.com;
                  frame-src https://www.youtube.com https://www.youtube-nocookie.com;
-                 connect-src 'self' https://monorail-edge.shopifysvc.com https://a.]klaviyo.com;">
+                 connect-src 'self' https://monorail-edge.shopifysvc.com https://a.klaviyo.com;">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
@@ -31,13 +31,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+  {%- comment -%} Google Fonts — Bebas Neue, Cormorant Garamond, Barlow, Barlow Condensed {%- endcomment -%}
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   {%- comment -%} Favicon {%- endcomment -%}
   {% if settings.favicon != blank %}
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
   {% endif %}
 
   {%- comment -%} Theme stylesheet {%- endcomment -%}
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ 'relentless.css' | asset_url | stylesheet_tag }}
 
   {%- comment -%} Canonical URL for SEO {%- endcomment -%}
   <link rel="canonical" href="{{ canonical_url }}">
@@ -53,6 +56,10 @@
   {%- comment -%} Cookie consent banner — GDPR/CCPA requirement {%- endcomment -%}
   {% render 'cookie-consent' %}
 
+  {%- comment -%} Cart drawer — slide-out panel {%- endcomment -%}
+  {% render 'cart-drawer' %}
+
+  {%- section 'announcement-bar' -%}
   {%- section 'header' -%}
 
   <main id="main-content" role="main" tabindex="-1">
@@ -67,6 +74,6 @@
   {% endif %}
 
   {%- comment -%} Theme JavaScript {%- endcomment -%}
-  {{ 'theme.js' | asset_url | script_tag }}
+  {{ 'relentless.js' | asset_url | script_tag }}
 </body>
 </html>

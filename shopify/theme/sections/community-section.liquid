@@ -1,0 +1,165 @@
+{% comment %}
+  community-section.liquid
+  "We Are Still Building" — Give grid (time/resources/energy) + cause cards.
+{% endcomment %}
+
+<section class="community" id="building">
+  <div class="community-inner">
+
+    <div class="community-header">
+      <div class="section-eyebrow" aria-hidden="true">
+        <div class="gold-rule"></div>
+        {{ section.settings.eyebrow | default: 'We Are Still Building' }}
+        <div class="gold-rule"></div>
+      </div>
+      <h2>{{ section.settings.heading | default: 'Nothing Is Finished' }}</h2>
+      <p>{{ section.settings.subheading | default: 'We are still building. You can build with us.' }}</p>
+    </div>
+
+    {%- comment -%} Give grid — three ways to contribute {%- endcomment -%}
+    <div class="give-grid">
+
+      <div class="give-card">
+        <svg class="give-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="24" cy="24" r="20"/><path d="M24 14v20M14 24h20"/>
+        </svg>
+        <h3>{{ section.settings.give_time_title | default: 'Give Time' }}</h3>
+        <p>{{ section.settings.give_time_desc | default: 'Volunteer. Mentor. Coach. Show up for someone who needs it.' }}</p>
+      </div>
+
+      <div class="give-card">
+        <svg class="give-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M24 4l6 12 13 2-9 9 2 13-12-6-12 6 2-13-9-9 13-2z"/>
+        </svg>
+        <h3>{{ section.settings.give_resources_title | default: 'Give Resources' }}</h3>
+        <p>{{ section.settings.give_resources_desc | default: 'Donate equipment. Fund programs. Put resources where they matter.' }}</p>
+      </div>
+
+      <div class="give-card">
+        <svg class="give-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M24 44s-16-8.4-16-22C8 13.2 15.2 6 24 6s16 7.2 16 16c0 13.6-16 22-16 22z"/>
+        </svg>
+        <h3>{{ section.settings.give_energy_title | default: 'Give Energy' }}</h3>
+        <p>{{ section.settings.give_energy_desc | default: 'Share. Speak up. Bring people in. Energy is the most contagious resource.' }}</p>
+      </div>
+
+    </div>
+
+    {%- comment -%} Cause cards — link to still-building page categories {%- endcomment -%}
+    <p class="causes-label">{{ section.settings.causes_label | default: 'Start somewhere real.' }}</p>
+    <div class="causes-grid">
+
+      <a href="{{ pages['still-building'].url | default: '/pages/still-building' }}#children-education"
+         class="cause-card"
+         aria-label="Children and Education">
+        <div class="cause-card-bg" aria-hidden="true">📚</div>
+        <div class="cause-label">Children &amp; Education</div>
+      </a>
+
+      <a href="{{ pages['still-building'].url | default: '/pages/still-building' }}#health-healing"
+         class="cause-card"
+         aria-label="Health and Healing">
+        <div class="cause-card-bg" aria-hidden="true">🎗️</div>
+        <div class="cause-label">Health &amp; Healing</div>
+      </a>
+
+      <a href="{{ pages['still-building'].url | default: '/pages/still-building' }}#community-support"
+         class="cause-card"
+         aria-label="Community Support">
+        <div class="cause-card-bg" aria-hidden="true">🤝</div>
+        <div class="cause-label">Community Support</div>
+      </a>
+
+      <a href="{{ pages['still-building'].url | default: '/pages/still-building' }}#youth-sports"
+         class="cause-card"
+         aria-label="Youth and Sports">
+        <div class="cause-card-bg" aria-hidden="true">⛸️</div>
+        <div class="cause-label">Youth &amp; Sports</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Community Section",
+  "tag": "div",
+  "class": "community-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "We Are Still Building"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Nothing Is Finished"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "We are still building. You can build with us."
+    },
+    {
+      "type": "header",
+      "content": "Give Cards"
+    },
+    {
+      "type": "text",
+      "id": "give_time_title",
+      "label": "Give Time — title",
+      "default": "Give Time"
+    },
+    {
+      "type": "textarea",
+      "id": "give_time_desc",
+      "label": "Give Time — description",
+      "default": "Volunteer. Mentor. Coach. Show up for someone who needs it."
+    },
+    {
+      "type": "text",
+      "id": "give_resources_title",
+      "label": "Give Resources — title",
+      "default": "Give Resources"
+    },
+    {
+      "type": "textarea",
+      "id": "give_resources_desc",
+      "label": "Give Resources — description",
+      "default": "Donate equipment. Fund programs. Put resources where they matter."
+    },
+    {
+      "type": "text",
+      "id": "give_energy_title",
+      "label": "Give Energy — title",
+      "default": "Give Energy"
+    },
+    {
+      "type": "textarea",
+      "id": "give_energy_desc",
+      "label": "Give Energy — description",
+      "default": "Share. Speak up. Bring people in. Energy is the most contagious resource."
+    },
+    {
+      "type": "header",
+      "content": "Causes"
+    },
+    {
+      "type": "text",
+      "id": "causes_label",
+      "label": "Causes intro text",
+      "default": "Start somewhere real."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Community Section"
+    }
+  ]
+}
+{% endschema %}

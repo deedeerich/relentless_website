@@ -1,0 +1,212 @@
+{% comment %}
+  page-philosophy.liquid
+  Full philosophy page — manifesto, pull quotes, faith easter egg, closing CTA.
+  Minimal starfield (quieter cosmos — JS handles reduced density).
+{% endcomment %}
+
+<div class="page-philosophy">
+
+  {%- comment -%} Quiet starfield — same canvas, JS detects .page-philosophy and reduces density {%- endcomment -%}
+  <canvas id="starfield" aria-hidden="true" role="presentation" class="starfield--quiet"></canvas>
+
+  {%- comment -%} Page hero {%- endcomment -%}
+  <section class="philosophy-hero">
+    <div class="section-eyebrow" aria-hidden="true">
+      <div class="gold-rule"></div>
+      The Philosophy
+      <div class="gold-rule"></div>
+    </div>
+    <h1 class="philosophy-hero-title">{{ section.settings.hero_title | default: 'Nothing Is Finished.' }}</h1>
+    <p class="philosophy-hero-sub">{{ section.settings.hero_subtitle | default: 'The belief behind the brand.' }}</p>
+  </section>
+
+  <div class="shift-line" aria-hidden="true"></div>
+
+  {%- comment -%} Manifesto blocks — scroll reveal applied by JS {%- endcomment -%}
+  <section class="manifesto-blocks">
+
+    <div class="manifesto-block scroll-reveal">
+      <h2>{{ section.settings.block_1_heading | default: 'It started on the ice.' }}</h2>
+      <p>{{ section.settings.block_1_text | default: 'Not with a brand. Not with a product. With a feeling. The feeling of showing up every single day to a rink where nobody was watching, nobody was keeping score, and the only voice telling you to keep going was your own.' }}</p>
+    </div>
+
+    <div class="manifesto-pullquote scroll-reveal">
+      <blockquote>{{ section.settings.pullquote_1 | default: '"The moment you believe you&rsquo;re finished — finished growing, finished learning, finished becoming — is the moment you stop."' }}</blockquote>
+    </div>
+
+    <div class="manifesto-block scroll-reveal">
+      <h2>{{ section.settings.block_2_heading | default: 'This is not a brand.' }}</h2>
+      <p>{{ section.settings.block_2_text | default: 'It&rsquo;s a mindset that started on the ice and spread to every athlete, every coach, every person who ever pushed past what felt possible. Relentless is the decision to keep going — not because the work gets easier, but because you refuse to stop.' }}</p>
+    </div>
+
+    <div class="manifesto-block scroll-reveal">
+      <h2>{{ section.settings.block_3_heading | default: 'You are still becoming.' }}</h2>
+      <p>{{ section.settings.block_3_text | default: 'Every hard rep, every early morning, every quiet decision to not give up — that&rsquo;s the pursuit. You don&rsquo;t need to be perfect. You don&rsquo;t need to be finished. You just need to be moving.' }}</p>
+    </div>
+
+    <div class="manifesto-pullquote scroll-reveal">
+      <blockquote>{{ section.settings.pullquote_2 | default: '"We are all unfinished. That&rsquo;s the point."' }}</blockquote>
+    </div>
+
+    <div class="manifesto-block scroll-reveal">
+      <h2>{{ section.settings.block_4_heading | default: 'We are still building.' }}</h2>
+      <p>{{ section.settings.block_4_text | default: 'Relentless Outreach isn&rsquo;t waiting until we&rsquo;re big enough. We&rsquo;re building now — mentoring, volunteering, sponsoring young athletes, strengthening the communities that shaped us. Because nothing is finished, and there is always more we can do.' }}</p>
+    </div>
+
+    {%- comment -%} Faith easter egg — subtle theological resonance woven into copy {%- endcomment -%}
+    <div class="manifesto-block scroll-reveal">
+      <h2>{{ section.settings.block_5_heading | default: 'Nothing is finished.' }}</h2>
+      <p>{{ section.settings.block_5_text | default: 'There is a quiet truth in the unfinished. The work that shapes you most is the work that never ends. We believe in the pursuit — not because the destination justifies the journey, but because the journey itself is the point. Keep going. You are not done yet.' }}</p>
+    </div>
+
+  </section>
+
+  {%- comment -%} Closing CTA {%- endcomment -%}
+  <section class="philosophy-closing scroll-reveal">
+    <p class="philosophy-closing-text">{{ section.settings.closing_text | default: 'The work is not finished. Neither are you.' }}</p>
+    <a href="{{ section.settings.closing_cta_url | default: routes.root_url }}"
+       class="outreach-cta">
+      {{ section.settings.closing_cta_text | default: 'Enter the Movement →' }}
+    </a>
+  </section>
+
+</div>
+
+{% schema %}
+{
+  "name": "Philosophy Page",
+  "tag": "div",
+  "class": "page-philosophy-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Nothing Is Finished."
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero subtitle",
+      "default": "The belief behind the brand."
+    },
+    {
+      "type": "header",
+      "content": "Manifesto Block 1"
+    },
+    {
+      "type": "text",
+      "id": "block_1_heading",
+      "label": "Heading",
+      "default": "It started on the ice."
+    },
+    {
+      "type": "textarea",
+      "id": "block_1_text",
+      "label": "Text",
+      "default": "Not with a brand. Not with a product. With a feeling. The feeling of showing up every single day to a rink where nobody was watching, nobody was keeping score, and the only voice telling you to keep going was your own."
+    },
+    {
+      "type": "textarea",
+      "id": "pullquote_1",
+      "label": "Pull quote 1",
+      "default": "\"The moment you believe you're finished — finished growing, finished learning, finished becoming — is the moment you stop.\""
+    },
+    {
+      "type": "header",
+      "content": "Manifesto Block 2"
+    },
+    {
+      "type": "text",
+      "id": "block_2_heading",
+      "label": "Heading",
+      "default": "This is not a brand."
+    },
+    {
+      "type": "textarea",
+      "id": "block_2_text",
+      "label": "Text",
+      "default": "It's a mindset that started on the ice and spread to every athlete, every coach, every person who ever pushed past what felt possible. Relentless is the decision to keep going — not because the work gets easier, but because you refuse to stop."
+    },
+    {
+      "type": "header",
+      "content": "Manifesto Block 3"
+    },
+    {
+      "type": "text",
+      "id": "block_3_heading",
+      "label": "Heading",
+      "default": "You are still becoming."
+    },
+    {
+      "type": "textarea",
+      "id": "block_3_text",
+      "label": "Text",
+      "default": "Every hard rep, every early morning, every quiet decision to not give up — that's the pursuit. You don't need to be perfect. You don't need to be finished. You just need to be moving."
+    },
+    {
+      "type": "textarea",
+      "id": "pullquote_2",
+      "label": "Pull quote 2",
+      "default": "\"We are all unfinished. That's the point.\""
+    },
+    {
+      "type": "header",
+      "content": "Manifesto Block 4"
+    },
+    {
+      "type": "text",
+      "id": "block_4_heading",
+      "label": "Heading",
+      "default": "We are still building."
+    },
+    {
+      "type": "textarea",
+      "id": "block_4_text",
+      "label": "Text",
+      "default": "Relentless Outreach isn't waiting until we're big enough. We're building now — mentoring, volunteering, sponsoring young athletes, strengthening the communities that shaped us. Because nothing is finished, and there is always more we can do."
+    },
+    {
+      "type": "header",
+      "content": "Manifesto Block 5 (Faith)"
+    },
+    {
+      "type": "text",
+      "id": "block_5_heading",
+      "label": "Heading",
+      "default": "Nothing is finished."
+    },
+    {
+      "type": "textarea",
+      "id": "block_5_text",
+      "label": "Text",
+      "default": "There is a quiet truth in the unfinished. The work that shapes you most is the work that never ends. We believe in the pursuit — not because the destination justifies the journey, but because the journey itself is the point. Keep going. You are not done yet."
+    },
+    {
+      "type": "header",
+      "content": "Closing CTA"
+    },
+    {
+      "type": "text",
+      "id": "closing_text",
+      "label": "Closing statement",
+      "default": "The work is not finished. Neither are you."
+    },
+    {
+      "type": "text",
+      "id": "closing_cta_text",
+      "label": "CTA text",
+      "default": "Enter the Movement →"
+    },
+    {
+      "type": "url",
+      "id": "closing_cta_url",
+      "label": "CTA URL"
+    }
+  ]
+}
+{% endschema %}
