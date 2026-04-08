@@ -1,0 +1,30 @@
+{% comment %}
+  main-list-collections.liquid
+  Lists all collections in the store.
+{% endcomment %}
+
+<section class="list-collections-page">
+  <div class="list-collections-inner">
+    <h1>{{ 'navigation.shop' | t | default: 'Shop' }}</h1>
+    <div class="collections-grid">
+      {% for collection in collections %}
+        {% unless collection.handle == 'frontpage' %}
+          <a href="{{ collection.url }}" class="collection-card">
+            {% if collection.image %}
+              {{ collection.image | image_url: width: 400 | image_tag: alt: collection.title, loading: 'lazy' }}
+            {% endif %}
+            <h2>{{ collection.title }}</h2>
+          </a>
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections List",
+  "tag": "div",
+  "class": "main-list-collections-section"
+}
+{% endschema %}

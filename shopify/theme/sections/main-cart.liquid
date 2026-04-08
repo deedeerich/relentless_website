@@ -1,0 +1,49 @@
+{% comment %}
+  main-cart.liquid
+  Full cart page — line items, subtotal, checkout.
+{% endcomment %}
+
+<section class="cart-page">
+  <div class="cart-inner">
+    <h1>{{ 'cart.title' | t | default: 'Your Cart' }}</h1>
+
+    {% if cart.item_count > 0 %}
+      <div class="cart-items">
+        {% for item in cart.items %}
+          <div class="cart-line-item">
+            {% if item.image %}
+              <a href="{{ item.url }}">
+                {{ item.image | image_url: width: 200 | image_tag: alt: item.title, loading: 'lazy' }}
+              </a>
+            {% endif %}
+            <div class="cart-line-details">
+              <a href="{{ item.url }}" class="cart-line-title">{{ item.title }}</a>
+              {% unless item.variant_title == 'Default Title' %}
+                <p class="cart-line-variant">{{ item.variant_title }}</p>
+              {% endunless %}
+              <p class="cart-line-price">{{ item.final_line_price | money }}</p>
+              <p class="cart-line-qty">Qty: {{ item.quantity }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="cart-summary">
+        <p class="cart-total">{{ 'cart.subtotal' | t | default: 'Subtotal' }}: {{ cart.total_price | money }}</p>
+        <a href="{{ routes.cart_url }}/checkout" class="cart-checkout-btn">{{ 'cart.checkout' | t | default: 'Checkout' }}</a>
+      </div>
+    {% else %}
+      <div class="cart-empty-page">
+        <p>{{ 'cart.empty' | t | default: 'Your cart is empty.' }}</p>
+        <a href="{{ routes.collections_url }}/all" class="philosophy-cta">{{ 'cart.continue_shopping' | t | default: 'Start Shopping →' }}</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "tag": "div",
+  "class": "main-cart-section"
+}
+{% endschema %}

@@ -74,6 +74,6 @@
   {% endif %}
 
   {%- comment -%} Theme JavaScript {%- endcomment -%}
-  {{ 'relentless.js' | asset_url | script_tag }}
+  <script src="{{ 'relentless.js' | asset_url }}" defer></script>
 </body>
 </html>
