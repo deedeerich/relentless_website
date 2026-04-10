@@ -31,10 +31,7 @@
         {% for item in cart.items %}
           <div class="cart-item" data-cart-item data-variant-id="{{ item.variant_id }}">
             {% if item.image != blank %}
-              <img src="{{ item.image | image_url: width: 120 }}"
-                   alt="{{ item.title | escape }}"
-                   width="60" height="60"
-                   loading="lazy" />
+              <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title | escape }}" width="60" height="60" loading="lazy" />
             {% endif %}
             <div class="cart-item-details">
               <p class="cart-item-title">{{ item.title }}</p>
