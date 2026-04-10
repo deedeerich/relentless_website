@@ -1,0 +1,54 @@
+{% comment %}
+  gift_card.liquid
+  Gift card template — must be a .liquid file (Shopify requirement, not JSON).
+  Uses its own layout since gift cards are standalone pages.
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gift Card — {{ shop.name }}</title>
+  {{ 'relentless.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+</head>
+<body class="template-gift-card">
+  <main class="gift-card-page">
+    <div class="gift-card-inner">
+      <h1>{{ shop.name }}</h1>
+      <h2>Gift Card</h2>
+
+      <div class="gift-card-image">
+        {{ 'gift-card/card.jpg' | shopify_asset_url | img_tag: 'Gift card' }}
+      </div>
+
+      {% if gift_card.initial_value != gift_card.balance %}
+        <p class="gift-card-balance">Remaining balance: {{ gift_card.balance | money }}</p>
+      {% endif %}
+
+      <p class="gift-card-amount">{{ gift_card.initial_value | money }}</p>
+
+      <div class="gift-card-code">
+        <input type="text"
+               id="gift-card-code"
+               value="{{ gift_card.code | format_code }}"
+               readonly
+               aria-label="Gift card code" />
+      </div>
+
+      {% if gift_card.expired %}
+        <p class="gift-card-expired">This gift card expired on {{ gift_card.expires_on | date: '%B %d, %Y' }}.</p>
+      {% elsif gift_card.expires_on %}
+        <p class="gift-card-expiry">Valid until {{ gift_card.expires_on | date: '%B %d, %Y' }}</p>
+      {% endif %}
+
+      {% if gift_card.pass_url %}
+        <a href="{{ gift_card.pass_url }}" class="outreach-cta">Add to Apple Wallet</a>
+      {% endif %}
+
+      <a href="{{ shop.url }}" class="philosophy-cta">Start Shopping →</a>
+    </div>
+  </main>
+</body>
+</html>
