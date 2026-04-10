@@ -1,0 +1,26 @@
+{% comment %} main-customer-reset.liquid — Password reset form {% endcomment %}
+
+<section class="customer-page">
+  <div class="customer-inner">
+    <h1>Reset Password</h1>
+
+    {% form 'reset_customer_password' %}
+      {% if form.errors %}
+        <div class="form-errors">{{ form.errors | default_errors }}</div>
+      {% endif %}
+      <div class="form-group">
+        <label for="password">New Password</label>
+        <input type="password" id="password" name="customer[password]" autocomplete="new-password" required>
+      </div>
+      <div class="form-group">
+        <label for="password_confirmation">Confirm New Password</label>
+        <input type="password" id="password_confirmation" name="customer[password_confirmation]" autocomplete="new-password" required>
+      </div>
+      <button type="submit">Reset Password</button>
+    {% endform %}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Reset Password", "tag": "div", "class": "main-customer-reset-section" }
+{% endschema %}

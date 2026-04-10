@@ -1,0 +1,37 @@
+{% comment %} main-customer-order.liquid — Individual order details {% endcomment %}
+
+<section class="customer-page">
+  <div class="customer-inner">
+    <h1>Order {{ order.name }}</h1>
+    <p>Placed on {{ order.created_at | date: '%B %d, %Y' }}</p>
+
+    <table class="order-items">
+      <thead>
+        <tr><th>Product</th><th>Quantity</th><th>Price</th></tr>
+      </thead>
+      <tbody>
+        {% for line_item in order.line_items %}
+          <tr>
+            <td><a href="{{ line_item.url }}">{{ line_item.title }}</a></td>
+            <td>{{ line_item.quantity }}</td>
+            <td>{{ line_item.final_line_price | money }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="order-summary">
+      <p>Subtotal: {{ order.subtotal_price | money }}</p>
+      {% for shipping_method in order.shipping_methods %}
+        <p>Shipping ({{ shipping_method.title }}): {{ shipping_method.price | money }}</p>
+      {% endfor %}
+      <p><strong>Total: {{ order.total_net_amount | money }}</strong></p>
+    </div>
+
+    <a href="{{ routes.account_url }}" class="philosophy-cta">← Back to Account</a>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Customer Order", "tag": "div", "class": "main-customer-order-section" }
+{% endschema %}

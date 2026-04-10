@@ -1,0 +1,46 @@
+{% comment %} main-customer-login.liquid — Customer login form {% endcomment %}
+
+<section class="customer-page">
+  <div class="customer-inner">
+    <h1>Log In</h1>
+
+    {% form 'customer_login' %}
+      {% if form.errors %}
+        <div class="form-errors">{{ form.errors | default_errors }}</div>
+      {% endif %}
+      <div class="form-group">
+        <label for="customer_email">Email</label>
+        <input type="email" id="customer_email" name="customer[email]" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="customer_password">Password</label>
+        <input type="password" id="customer_password" name="customer[password]" autocomplete="current-password" required>
+      </div>
+      <button type="submit">Log In</button>
+      <p><a href="#recover">Forgot your password?</a></p>
+    {% endform %}
+
+    <div id="recover" style="display:none">
+      <h2>Reset Password</h2>
+      {% form 'recover_customer_password' %}
+        {% if form.errors %}
+          <div class="form-errors">{{ form.errors | default_errors }}</div>
+        {% endif %}
+        {% if form.posted_successfully? %}
+          <p>We've sent a reset link to your email.</p>
+        {% endif %}
+        <div class="form-group">
+          <label for="recover_email">Email</label>
+          <input type="email" id="recover_email" name="email" autocomplete="email" required>
+        </div>
+        <button type="submit">Send Reset Link</button>
+      {% endform %}
+    </div>
+
+    <p>Don't have an account? <a href="{{ routes.account_register_url }}">Create one</a></p>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Customer Login", "tag": "div", "class": "main-customer-login-section" }
+{% endschema %}

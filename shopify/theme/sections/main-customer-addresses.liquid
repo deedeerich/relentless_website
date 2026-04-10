@@ -1,0 +1,50 @@
+{% comment %} main-customer-addresses.liquid — Manage customer addresses {% endcomment %}
+
+<section class="customer-page">
+  <div class="customer-inner">
+    <h1>Your Addresses</h1>
+
+    {% for address in customer.addresses %}
+      <div class="customer-address">
+        <p>{{ address | format_address }}</p>
+        {% if address == customer.default_address %}<span class="default-badge">Default</span>{% endif %}
+      </div>
+    {% endfor %}
+
+    <h2>Add a New Address</h2>
+    {% form 'customer_address', customer.new_address %}
+      {% if form.errors %}
+        <div class="form-errors">{{ form.errors | default_errors }}</div>
+      {% endif %}
+      <div class="form-group">
+        <label for="address_first_name">First Name</label>
+        <input type="text" id="address_first_name" name="address[first_name]" autocomplete="given-name">
+      </div>
+      <div class="form-group">
+        <label for="address_last_name">Last Name</label>
+        <input type="text" id="address_last_name" name="address[last_name]" autocomplete="family-name">
+      </div>
+      <div class="form-group">
+        <label for="address_address1">Address</label>
+        <input type="text" id="address_address1" name="address[address1]" autocomplete="address-line1">
+      </div>
+      <div class="form-group">
+        <label for="address_city">City</label>
+        <input type="text" id="address_city" name="address[city]" autocomplete="address-level2">
+      </div>
+      <div class="form-group">
+        <label for="address_zip">ZIP / Postal Code</label>
+        <input type="text" id="address_zip" name="address[zip]" autocomplete="postal-code">
+      </div>
+      <div class="form-group">
+        <label for="address_country">Country</label>
+        <select id="address_country" name="address[country]" autocomplete="country">{{ all_country_option_tags }}</select>
+      </div>
+      <button type="submit">Add Address</button>
+    {% endform %}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Customer Addresses", "tag": "div", "class": "main-customer-addresses-section" }
+{% endschema %}

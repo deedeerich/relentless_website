@@ -6,10 +6,13 @@ on:
 
 permissions:
   contents: read
+  actions: read
+  security-events: read
 
 jobs:
+  # ── Gate 1: Theme must pass Shopify linter ──
   theme-check:
-    name: Pre-Deploy Theme Check
+    name: Theme Check Gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,9 +29,78 @@ jobs:
           cd shopify/theme
           theme-check --fail-level error
 
+  # ── Gate 2: Security scan must pass (zero vulns) ──
+  security-gate:
+    name: Security Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+      - name: Sensitive file guard
+        run: |
+          FOUND=0
+          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json"; do
+            if find . -name "$pattern" -not -path "./.git/*" -not -name ".env.example" | grep -q .; then
+              echo "BLOCKED: Found sensitive file matching pattern: $pattern"
+              FOUND=1
+            fi
+          done
+          if [ "$FOUND" -eq 1 ]; then
+            echo "::error::Sensitive files detected — deploy blocked."
+            exit 1
+          fi
+
+      - name: CSP compliance check
+        run: |
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -nE 'on(click|load|error|submit|change|focus|blur|mouseover|mouseout|keydown|keyup)=' "$file" | grep -q .; then
+              echo "::error::Inline event handler found in $file — CSP violation, deploy blocked."
+              exit 1
+            fi
+          done
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Python dependency audit
+        run: |
+          pip install pip-audit
+          if [ -f moderation/ai_screener/requirements.txt ]; then
+            pip-audit -r moderation/ai_screener/requirements.txt --desc
+          fi
+
+  # ── Gate 3: Accessibility must pass ──
+  accessibility-gate:
+    name: Accessibility Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Accessibility checks
+        run: |
+          if ! grep -r 'skip-to-content' shopify/theme/layout/ > /dev/null 2>&1; then
+            echo "::error::Missing skip-to-content link — WCAG 2.1 AA, deploy blocked."
+            exit 1
+          fi
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -n '<img ' "$file" | grep -v 'alt=' | grep -q .; then
+              echo "::error::Image missing alt attribute in $file — WCAG 2.1 AA, deploy blocked."
+              exit 1
+            fi
+          done
+
+  # ── Deploy: Only after ALL gates pass ──
   deploy-staging:
     name: Deploy to Staging
-    needs: theme-check
+    needs: [theme-check, security-gate, accessibility-gate]
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     environment: staging
@@ -51,7 +123,7 @@ jobs:
 
   deploy-production:
     name: Deploy to Production
-    needs: theme-check
+    needs: [theme-check, security-gate, accessibility-gate]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
