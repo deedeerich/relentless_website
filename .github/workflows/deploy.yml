@@ -4,6 +4,10 @@ on:
   push:
     branches: [main, develop]
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false  # Never cancel in-flight deploys
+
 permissions:
   contents: read
   actions: read
@@ -14,6 +18,7 @@ jobs:
   theme-check:
     name: Theme Check Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -33,6 +38,7 @@ jobs:
   security-gate:
     name: Security Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,8 +51,9 @@ jobs:
 
       - name: Sensitive file guard
         run: |
+          set -euo pipefail
           FOUND=0
-          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json"; do
+          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json" "*.pfx" "*.keystore"; do
             if find . -name "$pattern" -not -path "./.git/*" -not -name ".env.example" | grep -q .; then
               echo "BLOCKED: Found sensitive file matching pattern: $pattern"
               FOUND=1
@@ -59,6 +66,7 @@ jobs:
 
       - name: CSP compliance check
         run: |
+          set -euo pipefail
           for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
             if grep -nE 'on(click|load|error|submit|change|focus|blur|mouseover|mouseout|keydown|keyup)=' "$file" | grep -q .; then
               echo "::error::Inline event handler found in $file — CSP violation, deploy blocked."
@@ -81,11 +89,13 @@ jobs:
   accessibility-gate:
     name: Accessibility Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
       - name: Accessibility checks
         run: |
+          set -euo pipefail
           if ! grep -r 'skip-to-content' shopify/theme/layout/ > /dev/null 2>&1; then
             echo "::error::Missing skip-to-content link — WCAG 2.1 AA, deploy blocked."
             exit 1
@@ -103,6 +113,7 @@ jobs:
     needs: [theme-check, security-gate, accessibility-gate]
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment: staging
     steps:
       - uses: actions/checkout@v4
@@ -126,6 +137,7 @@ jobs:
     needs: [theme-check, security-gate, accessibility-gate]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment: production
     steps:
       - uses: actions/checkout@v4

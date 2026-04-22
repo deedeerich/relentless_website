@@ -8,6 +8,10 @@ on:
   schedule:
     - cron: '0 8 * * 1'  # Weekly Monday 8am UTC
 
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
   security-events: write
@@ -16,6 +20,7 @@ jobs:
   secret-scan:
     name: Secret Scanning
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,13 +34,15 @@ jobs:
   sensitive-file-guard:
     name: Sensitive File Guard
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
       - name: Check for sensitive files
         run: |
+          set -euo pipefail
           FOUND=0
-          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json" "service-account*.json"; do
+          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json" "service-account*.json" "*.pfx" "*.keystore"; do
             if find . -name "$pattern" -not -path "./.git/*" -not -name ".env.example" | grep -q .; then
               echo "BLOCKED: Found sensitive file matching pattern: $pattern"
               find . -name "$pattern" -not -path "./.git/*" -not -name ".env.example"
@@ -51,6 +58,7 @@ jobs:
   python-security:
     name: Python Dependency Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -69,9 +77,41 @@ jobs:
             echo "No Python requirements found — skipping."
           fi
 
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        run: |
+          semgrep scan \
+            --config auto \
+            --config p/javascript \
+            --config p/python \
+            --config p/secrets \
+            --config p/owasp-top-ten \
+            --sarif --output semgrep-results.sarif \
+            --error \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude 'docs/design' \
+            shopify/ moderation/ scripts/ klaviyo/
+
+      - name: Upload SARIF to GitHub
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep-results.sarif
+          category: semgrep
+
   theme-lint:
     name: Shopify Theme Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -90,11 +130,13 @@ jobs:
   accessibility-lint:
     name: Accessibility Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
       - name: Check Liquid templates for accessibility
         run: |
+          set -euo pipefail
           EXIT_CODE=0
 
           echo "=== Checking for images missing alt attributes ==="
@@ -133,17 +175,28 @@ jobs:
           done
 
           echo ""
+          echo "=== Checking form inputs have labels ==="
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -n '<input' "$file" | grep -v 'type="hidden"' | grep -v 'aria-label' | grep -v 'id=' | grep -q .; then
+              echo "WARNING: Input possibly missing label association in $file:"
+              grep -n '<input' "$file" | grep -v 'type="hidden"' | grep -v 'aria-label' | grep -v 'id='
+            fi
+          done
+
+          echo ""
           echo "Accessibility lint complete."
           exit $EXIT_CODE
 
   csp-check:
     name: CSP Compliance Check
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
       - name: Check for inline event handlers
         run: |
+          set -euo pipefail
           EXIT_CODE=0
           echo "=== Checking for inline event handlers (CSP violation) ==="
           for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
@@ -153,7 +206,18 @@ jobs:
               EXIT_CODE=1
             fi
           done
+
+          echo ""
+          echo "=== Checking for javascript: protocol ==="
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -nE 'javascript:' "$file" | grep -q .; then
+              echo "ERROR: javascript: protocol found in $file:"
+              grep -nE 'javascript:' "$file"
+              EXIT_CODE=1
+            fi
+          done
+
           if [ "$EXIT_CODE" -eq 0 ]; then
-            echo "OK: No inline event handlers found."
+            echo "OK: No CSP violations found."
           fi
           exit $EXIT_CODE

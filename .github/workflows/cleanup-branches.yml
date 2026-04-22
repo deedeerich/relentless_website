@@ -1,0 +1,69 @@
+name: "Cleanup — Stale Branches"
+
+# Runs nightly at 2am UTC. Deletes remote branches that have been merged
+# into main. Keeps main, develop, and any branches with open PRs.
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    name: Delete merged branches
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Delete merged branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          echo "Fetching all remote branches..."
+          git fetch --prune origin
+
+          # Get branches with open PRs (never delete these)
+          OPEN_PR_BRANCHES=$(gh pr list --state open --json headRefName --jq '.[].headRefName' || echo "")
+
+          DELETED=0
+          SKIPPED=0
+          PROTECTED=0
+
+          for branch in $(git branch -r --merged origin/main | grep 'origin/' | grep -v 'origin/main$' | grep -v 'origin/develop$' | sed 's|origin/||' | xargs); do
+            # Skip protected branches
+            if [ "$branch" = "main" ] || [ "$branch" = "develop" ] || [ "$branch" = "HEAD" ]; then
+              continue
+            fi
+
+            # Skip branches with open PRs
+            if echo "$OPEN_PR_BRANCHES" | grep -qx "$branch" 2>/dev/null; then
+              echo "Skipping $branch (has open PR)"
+              PROTECTED=$((PROTECTED + 1))
+              continue
+            fi
+
+            # Delete the merged branch
+            if git push origin --delete "$branch" 2>/dev/null; then
+              echo "Deleted $branch"
+              DELETED=$((DELETED + 1))
+            else
+              echo "Failed to delete $branch"
+              SKIPPED=$((SKIPPED + 1))
+            fi
+          done
+
+          echo ""
+          echo "=========================================="
+          echo "Branch cleanup summary:"
+          echo "  Deleted: ${DELETED}"
+          echo "  Skipped (failed): ${SKIPPED}"
+          echo "  Protected (open PR): ${PROTECTED}"
+          echo "=========================================="
