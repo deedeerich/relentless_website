@@ -37,6 +37,13 @@
       {{ section.settings.cta_text | default: 'Shop The Movement' }}
     </a>
 
+    <button class="nav-cart" data-cart-open aria-label="{{ 'accessibility.cart' | t | default: 'Cart' }}">
+      Cart
+      {% if cart.item_count > 0 %}
+        <span class="nav-cart-count">{{ cart.item_count }}</span>
+      {% endif %}
+    </button>
+
     {%- comment -%} Mobile hamburger — toggled by relentless.js {%- endcomment -%}
     <button class="nav-hamburger"
             aria-label="{{ 'accessibility.menu_toggle' | t | default: 'Toggle menu' }}"

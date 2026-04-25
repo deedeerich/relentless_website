@@ -704,6 +704,7 @@
         if (entry.isIntersecting) {
           entry.target.style.opacity = '1';
           entry.target.style.transform = 'translateY(0)';
+          entry.target.classList.add('revealed');
           // Once revealed, stop observing to avoid re-triggering
           observer.unobserve(entry.target);
         }
@@ -715,7 +716,9 @@
       '.give-card',
       '.cause-card',
       '.submit-box',
-      '[data-reveal]'
+      '[data-reveal]',
+      '.scroll-reveal',
+      '.manifesto-block'
     ];
 
     var revealElements = document.querySelectorAll(revealSelectors.join(','));
@@ -749,26 +752,25 @@
    * ======================================================================== */
 
   (function initCookieConsent() {
-    var consentBanner = document.getElementById('cookieConsent');
+    var consentBanner = document.getElementById('cookie-consent-banner');
     if (!consentBanner) return;
 
     var STORAGE_KEY = 'relentless_cookie_consent';
 
-    // If already accepted, hide the banner immediately
+    // If already accepted, keep the banner hidden
     if (localStorage.getItem(STORAGE_KEY) === 'accepted') {
-      consentBanner.style.display = 'none';
       return;
     }
 
-    // Show the banner
-    consentBanner.style.display = '';
+    // Show the banner (remove hidden attribute)
+    consentBanner.removeAttribute('hidden');
 
     /**
      * Accepts cookies, hides the banner, and persists the choice.
      */
     function acceptCookies() {
       localStorage.setItem(STORAGE_KEY, 'accepted');
-      consentBanner.style.display = 'none';
+      consentBanner.setAttribute('hidden', '');
     }
 
     // Accept button
@@ -798,8 +800,10 @@
    * ======================================================================== */
 
   (function initWaitlistForm() {
-    var waitlistBtn = document.getElementById('waitlistBtn');
-    var waitlistEmail = document.getElementById('waitlistEmail');
+    var form = document.querySelector('[data-klaviyo-form]');
+    if (!form) return;
+    var waitlistEmail = form.querySelector('input[type="email"]');
+    var waitlistBtn = form.querySelector('button[type="submit"]');
     if (!waitlistBtn || !waitlistEmail) return;
 
     /**
@@ -891,44 +895,52 @@
   (function initMobileNav() {
     var nav = document.getElementById('mainNav');
     var hamburger = document.getElementById('navHamburger') ||
-                    document.querySelector('[data-nav-toggle]');
+                    document.querySelector('[data-nav-toggle]') ||
+                    document.querySelector('.nav-hamburger');
     if (!nav || !hamburger) return;
 
-    var navLinks = nav.querySelector('.nav-links');
+    var mobileNav = document.getElementById('mobile-nav');
 
     /**
      * Toggles the mobile navigation open/closed state.
      * Updates aria-expanded for accessibility.
      */
     function toggleMobileNav() {
-      var isOpen = nav.classList.toggle('nav-open');
+      var isOpen = hamburger.classList.toggle('active');
       hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+      if (mobileNav) {
+        mobileNav.classList.toggle('open', isOpen);
+        mobileNav.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      }
 
       // Prevent body scroll when nav is open
       document.body.style.overflow = isOpen ? 'hidden' : '';
     }
 
+    function closeMobileNav() {
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+      if (mobileNav) {
+        mobileNav.classList.remove('open');
+        mobileNav.setAttribute('aria-hidden', 'true');
+      }
+      document.body.style.overflow = '';
+    }
+
     hamburger.addEventListener('click', toggleMobileNav);
 
-    // Close nav when a nav link is clicked (for smooth scroll navigation)
-    if (navLinks) {
-      navLinks.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () {
-          if (nav.classList.contains('nav-open')) {
-            nav.classList.remove('nav-open');
-            hamburger.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-          }
-        });
+    // Close nav when a mobile nav link is clicked
+    if (mobileNav) {
+      mobileNav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileNav);
       });
     }
 
     // Close on Escape key
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && nav.classList.contains('nav-open')) {
-        nav.classList.remove('nav-open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
+      if (e.key === 'Escape' && hamburger.classList.contains('active')) {
+        closeMobileNav();
       }
     });
   })();
@@ -996,8 +1008,8 @@
     // Bind category cards — replace inline onclick with addEventListener
     var categoryCards = document.querySelectorAll('.category-card');
     categoryCards.forEach(function (card) {
-      // Read the action id from the data-action attribute or derive from onclick
-      var actionId = card.getAttribute('data-action');
+      // Read the action id from the data-action-open attribute
+      var actionId = card.getAttribute('data-action-open') || card.getAttribute('data-action');
 
       // Fallback: try to extract from the card's content or id
       if (!actionId) {
@@ -1072,6 +1084,59 @@
           target.scrollIntoView({ behavior: 'smooth' });
         }
       });
+    });
+  })();
+
+
+  /* ========================================================================
+   * 11. CART DRAWER
+   *
+   * Slide-out cart panel triggered by [data-cart-open] button.
+   * Overlay click and Escape key close the drawer.
+   *
+   * Targets:
+   *   - [data-cart-open] — triggers open
+   *   - .cart-drawer-overlay — backdrop
+   *   - .cart-drawer-panel — slide panel
+   *   - [data-cart-close] — close button
+   * ======================================================================== */
+
+  (function initCartDrawer() {
+    var overlay = document.querySelector('.cart-drawer-overlay');
+    var panel = document.querySelector('.cart-drawer-panel');
+    var openBtns = document.querySelectorAll('[data-cart-open]');
+    var closeBtns = document.querySelectorAll('[data-cart-close]');
+
+    if (!overlay || !panel || openBtns.length === 0) return;
+
+    function openCart() {
+      overlay.classList.add('open');
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      overlay.classList.remove('open');
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    openBtns.forEach(function (btn) {
+      btn.addEventListener('click', openCart);
+    });
+
+    closeBtns.forEach(function (btn) {
+      btn.addEventListener('click', closeCart);
+    });
+
+    overlay.addEventListener('click', closeCart);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && panel.classList.contains('open')) {
+        closeCart();
+      }
     });
   })();
 
