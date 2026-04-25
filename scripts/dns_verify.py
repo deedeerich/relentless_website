@@ -55,7 +55,7 @@ def check_https(domain: str) -> tuple[bool, str]:
         url = f"https://{domain}"
         req = urllib.request.Request(url, method="HEAD")
         ctx = ssl.create_default_context()
-        with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:
+        with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:  # nosemgrep: dynamic-urllib-use-detected — domain is a hardcoded module constant
             return True, f"HTTPS: {resp.status} (SSL valid)"
     except Exception as e:
         return False, f"HTTPS check failed: {e}"

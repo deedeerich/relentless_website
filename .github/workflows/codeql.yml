@@ -8,10 +8,6 @@ on:
   schedule:
     - cron: '0 6 * * 3'  # Weekly Wednesday 6am UTC
 
-concurrency:
-  group: codeql-${{ github.event.pull_request.number || github.ref }}-${{ matrix.language }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
 permissions:
   actions: read
   contents: read
@@ -22,6 +18,9 @@ jobs:
     name: CodeQL (${{ matrix.language }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    concurrency:
+      group: codeql-${{ github.event.pull_request.number || github.ref }}-${{ matrix.language }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     strategy:
       fail-fast: false
       matrix:
