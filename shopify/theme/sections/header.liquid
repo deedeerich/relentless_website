@@ -18,7 +18,7 @@
       <li><a href="{{ pages['still-becoming'].url | default: '/pages/still-becoming' }}">{{ section.settings.nav_becoming | default: 'Still Becoming' }}</a></li>
       <li><a href="{{ pages['still-building'].url | default: '/pages/still-building' }}">{{ section.settings.nav_building | default: 'Still Building' }}</a></li>
       <li><a href="{{ pages['philosophy'].url | default: '/pages/philosophy' }}">{{ section.settings.nav_philosophy | default: 'The Philosophy' }}</a></li>
-      <li><a href="{{ routes.collections_url }}/all">{{ section.settings.nav_shop | default: 'Be Relentless' }}</a></li>
+      <li><a href="{{ routes.root_url }}#shop">{{ section.settings.nav_shop | default: 'Be Relentless' }}</a></li>
     </ul>
   </nav>
 
@@ -33,7 +33,7 @@
       </a>
     {% endif %}
 
-    <a href="{{ routes.collections_url }}/all" class="nav-cta">
+    <a href="{{ routes.root_url }}#shop" class="nav-cta">
       {{ section.settings.cta_text | default: 'Shop The Movement' }}
     </a>
 
@@ -61,7 +61,7 @@
       <li><a href="{{ pages['still-becoming'].url | default: '/pages/still-becoming' }}">Still Becoming</a></li>
       <li><a href="{{ pages['still-building'].url | default: '/pages/still-building' }}">Still Building</a></li>
       <li><a href="{{ pages['philosophy'].url | default: '/pages/philosophy' }}">The Philosophy</a></li>
-      <li><a href="{{ routes.collections_url }}/all">Be Relentless</a></li>
+      <li><a href="{{ routes.root_url }}#shop">Be Relentless</a></li>
       {% if settings.social_instagram != blank %}
         <li><a href="{{ settings.social_instagram }}" target="_blank" rel="noopener noreferrer">@relentlessperforma</a></li>
       {% endif %}
