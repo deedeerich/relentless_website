@@ -1,0 +1,29 @@
+{
+  "current": {
+    "brand_tagline": "Nothing Is Finished",
+    "color_dark": "#050403",
+    "color_white": "#f5f0e8",
+    "color_gold": "#D4982E",
+    "color_gold_light": "#e8b54a",
+    "social_youtube": "https://www.youtube.com/@relentlessperforma",
+    "social_instagram": "https://www.instagram.com/relentlessperforma",
+    "show_cookie_consent": true,
+    "show_ccpa_notice": true,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "nav_becoming": "Still Becoming",
+          "nav_building": "Still Building",
+          "nav_philosophy": "The Philosophy",
+          "nav_shop": "Be Relentless",
+          "cta_text": "Shop The Movement"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
+      }
+    }
+  }
+}

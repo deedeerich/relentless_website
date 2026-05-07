@@ -3089,3 +3089,114 @@ footer {
 .cookie-consent__learn-more:hover {
   color: var(--gold-light);
 }
+
+
+/* ==========================================================================
+   26. PASSWORD PAGE
+   Uses existing hero classes (ht-nothing, ht-is, ht-finished, hero-title-block,
+   hero-title-main, hero-title-sub-row, hero-relentless, gold-rule-long)
+   ========================================================================== */
+
+.password-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  overflow-x: hidden;
+}
+
+.password-lockup {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px 24px;
+  animation: fadeUp 1.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.password-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 24px);
+  color: rgba(245, 240, 232, 0.5);
+  margin: 32px 0 8px;
+  letter-spacing: 0.04em;
+}
+
+.password-sub {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  color: rgba(245, 240, 232, 0.25);
+  margin-bottom: 40px;
+}
+
+.password-form {
+  display: flex;
+  gap: 0;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.password-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(200, 146, 42, 0.25);
+  border-right: none;
+  padding: 14px 20px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: var(--white);
+  outline: none;
+  letter-spacing: 0.08em;
+  transition: border-color 0.2s;
+}
+
+.password-input::placeholder {
+  color: rgba(245, 240, 232, 0.25);
+}
+
+.password-input:focus {
+  border-color: rgba(200, 146, 42, 0.5);
+}
+
+.password-btn {
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 14px 28px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--black);
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.password-btn:hover {
+  background: var(--gold-light);
+}
+
+.password-error {
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  color: #e74c3c;
+  margin-top: 12px;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 600px) {
+  .password-form {
+    flex-direction: column;
+  }
+
+  .password-input {
+    border-right: 1px solid rgba(200, 146, 42, 0.25);
+    border-bottom: none;
+  }
+}

@@ -6,7 +6,8 @@
     "close_cart": "Close cart",
     "skip_to_content": "Skip to content",
     "scroll_hint": "Scroll to explore",
-    "external_link": "Opens in a new window"
+    "external_link": "Opens in a new window",
+    "cart": "Cart"
   },
   "header": {
     "nav_becoming": "Still Becoming",

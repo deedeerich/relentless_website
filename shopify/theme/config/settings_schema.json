@@ -5,7 +5,7 @@
     "theme_version": "1.0.0",
     "theme_author": "Lighthouse Global",
     "theme_documentation_url": "https://github.com/deedeerich/relentless_website",
-    "theme_support_url": "mailto:dev@lighthouseglobal.io"
+    "theme_support_url": "https://github.com/deedeerich/relentless_website/issues"
   },
   {
     "name": "Brand",
@@ -68,14 +68,12 @@
       {
         "type": "url",
         "id": "social_youtube",
-        "label": "YouTube URL",
-        "default": "https://www.youtube.com/@relentlessperforma"
+        "label": "YouTube URL"
       },
       {
         "type": "url",
         "id": "social_instagram",
-        "label": "Instagram URL",
-        "default": "https://www.instagram.com/relentlessperforma"
+        "label": "Instagram URL"
       },
       {
         "type": "text",

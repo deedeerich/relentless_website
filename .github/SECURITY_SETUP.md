@@ -69,9 +69,9 @@ CodeQL and Semgrep are configured via workflows:
 | Environment | Secret Name | Description |
 |-------------|-------------|-------------|
 | staging | `SHOPIFY_STAGING_TOKEN` | Shopify CLI theme access token for staging |
-| staging | `SHOPIFY_STAGING_STORE_URL` | e.g. `relentlessperforma.myshopify.com` |
+| staging | `SHOPIFY_STAGING_STORE_URL` | `40hj3b-xx.myshopify.com` |
 | production | `SHOPIFY_PRODUCTION_TOKEN` | Shopify CLI theme access token for production |
-| production | `SHOPIFY_PRODUCTION_STORE_URL` | e.g. `relentlessperforma.myshopify.com` |
+| production | `SHOPIFY_PRODUCTION_STORE_URL` | `40hj3b-xx.myshopify.com` |
 
 ### Repository Secrets (Settings > Secrets and variables > Actions)
 | Secret Name | Description |
