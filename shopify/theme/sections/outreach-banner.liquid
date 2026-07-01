@@ -1,0 +1,68 @@
+{% comment %}
+  outreach-banner.liquid
+  Relentless Outreach closing CTA section.
+{% endcomment %}
+
+<section class="outreach">
+  <div class="outreach-bg" aria-hidden="true"></div>
+  <div class="outreach-inner">
+    <div class="section-eyebrow" aria-hidden="true">
+      <div class="gold-rule"></div>
+      {{ section.settings.eyebrow | default: 'Relentless Outreach' }}
+      <div class="gold-rule"></div>
+    </div>
+
+    <h2>{{ section.settings.heading | default: "We're not waiting until everything is perfect to start giving back." }}</h2>
+
+    <p>{{ section.settings.description | default: 'The work is already happening. In rinks, in classrooms, in communities that shaped us. Relentless Outreach is where we put the philosophy into action — because nothing is finished, and there is always more we can do.' }}</p>
+
+    <a href="{{ section.settings.cta_url | default: pages['still-building'].url | default: '/pages/still-building' }}"
+       class="outreach-cta">
+      {{ section.settings.cta_text | default: 'Take One Step →' }}
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Outreach Banner",
+  "tag": "div",
+  "class": "outreach-banner-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Relentless Outreach"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We're not waiting until everything is perfect to start giving back."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "The work is already happening. In rinks, in classrooms, in communities that shaped us. Relentless Outreach is where we put the philosophy into action — because nothing is finished, and there is always more we can do."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Take One Step →"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Outreach Banner"
+    }
+  ]
+}
+{% endschema %}

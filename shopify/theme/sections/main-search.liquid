@@ -1,0 +1,40 @@
+{% comment %}
+  main-search.liquid
+  Search results page.
+{% endcomment %}
+
+<section class="search-page">
+  <div class="search-inner">
+    <h1>{{ 'navigation.search' | t | default: 'Search' }}</h1>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+      <label for="search-input" class="visually-hidden">Search</label>
+      <input type="search" id="search-input" name="q" value="{{ search.terms | escape }}" placeholder="Search..." autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+
+    {% if search.performed %}
+      {% if search.results.size > 0 %}
+        <p class="search-count">{{ search.results.size }} results for "{{ search.terms }}"</p>
+        <div class="search-results">
+          {% for result in search.results %}
+            <div class="search-result-item">
+              <h2><a href="{{ result.url }}">{{ result.title }}</a></h2>
+              <p>{{ result.content | strip_html | truncatewords: 30 }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="search-no-results">No results found for "{{ search.terms }}". Try a different search.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search Page",
+  "tag": "div",
+  "class": "main-search-section"
+}
+{% endschema %}

@@ -1,0 +1,27 @@
+{% comment %}
+  klaviyo-form.liquid
+  Reusable Klaviyo email capture snippet.
+  Parameters: list_id, placeholder_text, button_text, success_message
+  Used by shop-teaser and any other email capture forms.
+  CSP-compliant — no inline handlers, uses addEventListener in relentless.js.
+{% endcomment %}
+
+<form class="waitlist-form klaviyo-form"
+      data-klaviyo-form
+      {% if list_id != blank %}data-klaviyo-list="{{ list_id }}"{% endif %}
+      novalidate>
+  <label for="klaviyo-email-{{ list_id | default: 'default' }}" class="visually-hidden">
+    {{ 'forms.email_label' | t | default: 'Email address' }}
+  </label>
+  <input type="email"
+         id="klaviyo-email-{{ list_id | default: 'default' }}"
+         name="email"
+         placeholder="{{ placeholder_text | default: 'your@email.com' }}"
+         aria-label="{{ 'forms.email_label' | t | default: 'Email address' }}"
+         autocomplete="email"
+         required />
+  <button type="submit">
+    {{ button_text | default: 'Notify Me' }}
+  </button>
+  <input type="hidden" name="success_message" value="{{ success_message | default: "You're on the list. ✓" }}" />
+</form>

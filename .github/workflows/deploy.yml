@@ -4,14 +4,116 @@ on:
   push:
     branches: [main, develop]
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false  # Never cancel in-flight deploys
+
 permissions:
   contents: read
+  actions: read
+  security-events: read
 
 jobs:
+  # ── Gate 1: Theme must pass Shopify linter ──
+  theme-check:
+    name: Theme Check Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install theme-check
+        run: gem install theme-check
+
+      - name: Run theme check
+        run: |
+          cd shopify/theme
+          theme-check --fail-level error
+
+  # ── Gate 2: Security scan must pass (zero vulns) ──
+  security-gate:
+    name: Security Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+      - name: Sensitive file guard
+        run: |
+          set -euo pipefail
+          FOUND=0
+          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json" "*.pfx" "*.keystore"; do
+            if find . -name "$pattern" -not -path "./.git/*" -not -name ".env.example" | grep -q .; then
+              echo "BLOCKED: Found sensitive file matching pattern: $pattern"
+              FOUND=1
+            fi
+          done
+          if [ "$FOUND" -eq 1 ]; then
+            echo "::error::Sensitive files detected — deploy blocked."
+            exit 1
+          fi
+
+      - name: CSP compliance check
+        run: |
+          set -euo pipefail
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -nE 'on(click|load|error|submit|change|focus|blur|mouseover|mouseout|keydown|keyup)=' "$file" | grep -q .; then
+              echo "::error::Inline event handler found in $file — CSP violation, deploy blocked."
+              exit 1
+            fi
+          done
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Python dependency audit
+        run: |
+          pip install pip-audit
+          if [ -f moderation/ai_screener/requirements.txt ]; then
+            pip-audit -r moderation/ai_screener/requirements.txt --desc
+          fi
+
+  # ── Gate 3: Accessibility must pass ──
+  accessibility-gate:
+    name: Accessibility Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Accessibility checks
+        run: |
+          set -euo pipefail
+          if ! grep -r 'skip-to-content' shopify/theme/layout/ > /dev/null 2>&1; then
+            echo "::error::Missing skip-to-content link — WCAG 2.1 AA, deploy blocked."
+            exit 1
+          fi
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -n '<img ' "$file" | grep -v 'alt=' | grep -q .; then
+              echo "::error::Image missing alt attribute in $file — WCAG 2.1 AA, deploy blocked."
+              exit 1
+            fi
+          done
+
+  # ── Deploy: Only after ALL gates pass ──
   deploy-staging:
     name: Deploy to Staging
+    needs: [theme-check, security-gate, accessibility-gate]
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment: staging
     steps:
       - uses: actions/checkout@v4
@@ -25,15 +127,17 @@ jobs:
 
       - name: Push theme to staging
         env:
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
-          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE_URL }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_STAGING_TOKEN }}
+          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STAGING_STORE_URL }}
         run: |
           shopify theme push --path shopify/theme --unpublished
 
   deploy-production:
     name: Deploy to Production
+    needs: [theme-check, security-gate, accessibility-gate]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment: production
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +151,7 @@ jobs:
 
       - name: Push theme to production
         env:
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
-          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE_URL }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_PRODUCTION_TOKEN }}
+          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_PRODUCTION_STORE_URL }}
         run: |
           shopify theme push --path shopify/theme

@@ -1,0 +1,20 @@
+{% comment %}
+  main-404.liquid
+  404 error page — on-brand "nothing is finished" messaging.
+{% endcomment %}
+
+<section class="page-404">
+  <div class="page-404-inner">
+    <h1>404</h1>
+    <p class="page-404-message">This page isn't finished yet. Or maybe it never existed. Either way — keep moving.</p>
+    <a href="{{ routes.root_url }}" class="outreach-cta">Back to the Movement →</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "tag": "div",
+  "class": "main-404-section"
+}
+{% endschema %}

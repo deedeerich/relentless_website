@@ -1,0 +1,37 @@
+{% comment %} main-customer-account.liquid — Customer account overview {% endcomment %}
+
+<section class="customer-page">
+  <div class="customer-inner">
+    <h1>{{ customer.name | default: 'My Account' }}</h1>
+    <p><a href="{{ routes.account_logout_url }}">Log out</a></p>
+
+    <h2>Order History</h2>
+    {% if customer.orders.size > 0 %}
+      <table class="customer-orders">
+        <thead>
+          <tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          {% for order in customer.orders %}
+            <tr>
+              <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+              <td>{{ order.created_at | date: '%B %d, %Y' }}</td>
+              <td>{{ order.fulfillment_status_label }}</td>
+              <td>{{ order.total_net_amount | money }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No orders yet.</p>
+    {% endif %}
+
+    <h2>Account Details</h2>
+    <p>{{ customer.email }}</p>
+    <a href="{{ routes.account_addresses_url }}">Manage Addresses</a>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Customer Account", "tag": "div", "class": "main-customer-account-section" }
+{% endschema %}

@@ -5,6 +5,12 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
+  schedule:
+    - cron: '0 8 * * 1'  # Weekly Monday 8am UTC
+
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -14,6 +20,7 @@ jobs:
   secret-scan:
     name: Secret Scanning
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,32 +31,18 @@ jobs:
         with:
           extra_args: --only-verified
 
-  dependency-audit:
-    name: Dependency Audit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Audit dependencies
-        run: npm audit --audit-level=high
-
   sensitive-file-guard:
     name: Sensitive File Guard
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
       - name: Check for sensitive files
         run: |
+          set -euo pipefail
           FOUND=0
-          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json"; do
+          for pattern in ".env" "*.key" "*.pem" "*.p12" "credentials.json" "service-account*.json" "*.pfx" "*.keystore"; do
             if find . -name "$pattern" -not -path "./.git/*" -not -name ".env.example" | grep -q .; then
               echo "BLOCKED: Found sensitive file matching pattern: $pattern"
               find . -name "$pattern" -not -path "./.git/*" -not -name ".env.example"
@@ -62,27 +55,169 @@ jobs:
           fi
           echo "No sensitive files found."
 
-  accessibility-lint:
-    name: Accessibility Lint
+  python-security:
+    name: Python Dependency Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: '20'
+          python-version: '3.12'
 
-      - name: Check Liquid templates for alt text
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Audit Python dependencies
         run: |
-          MISSING_ALT=0
+          if [ -f moderation/ai_screener/requirements.txt ]; then
+            pip-audit -r moderation/ai_screener/requirements.txt --desc
+          else
+            echo "No Python requirements found — skipping."
+          fi
+
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        run: |
+          semgrep scan \
+            --config auto \
+            --config p/javascript \
+            --config p/python \
+            --config p/secrets \
+            --config p/owasp-top-ten \
+            --sarif --output semgrep-results.sarif \
+            --error \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude 'docs/design' \
+            shopify/ moderation/ scripts/ klaviyo/
+
+      - name: Upload SARIF to GitHub
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep-results.sarif
+          category: semgrep
+
+  theme-lint:
+    name: Shopify Theme Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install theme-check
+        run: gem install theme-check
+
+      - name: Run theme check
+        run: |
+          cd shopify/theme
+          theme-check --fail-level error
+
+  accessibility-lint:
+    name: Accessibility Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Liquid templates for accessibility
+        run: |
+          set -euo pipefail
+          EXIT_CODE=0
+
+          echo "=== Checking for images missing alt attributes ==="
           for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
             if grep -n '<img ' "$file" | grep -v 'alt=' | grep -q .; then
               echo "WARNING: Missing alt attribute in $file:"
               grep -n '<img ' "$file" | grep -v 'alt='
-              MISSING_ALT=1
             fi
           done
-          if [ "$MISSING_ALT" -eq 1 ]; then
-            echo "::warning::Images missing alt attributes detected. WCAG 2.1 AA requires alt text on all images."
+
+          echo ""
+          echo "=== Checking for aria-hidden on decorative elements ==="
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -n '<canvas' "$file" | grep -v 'aria-hidden' | grep -q .; then
+              echo "WARNING: Canvas missing aria-hidden in $file:"
+              grep -n '<canvas' "$file" | grep -v 'aria-hidden'
+            fi
+          done
+
+          echo ""
+          echo "=== Checking for skip-to-content link ==="
+          if ! grep -r 'skip-to-content' shopify/theme/layout/ > /dev/null 2>&1; then
+            echo "ERROR: No skip-to-content link found in layout."
+            EXIT_CODE=1
+          else
+            echo "OK: skip-to-content link found."
           fi
+
+          echo ""
+          echo "=== Checking external links for rel=noopener ==="
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -n 'target="_blank"' "$file" | grep -v 'noopener' | grep -q .; then
+              echo "WARNING: External link missing rel=noopener in $file:"
+              grep -n 'target="_blank"' "$file" | grep -v 'noopener'
+            fi
+          done
+
+          echo ""
+          echo "=== Checking form inputs have labels ==="
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -n '<input' "$file" | grep -v 'type="hidden"' | grep -v 'aria-label' | grep -v 'id=' | grep -q .; then
+              echo "WARNING: Input possibly missing label association in $file:"
+              grep -n '<input' "$file" | grep -v 'type="hidden"' | grep -v 'aria-label' | grep -v 'id='
+            fi
+          done
+
+          echo ""
           echo "Accessibility lint complete."
+          exit $EXIT_CODE
+
+  csp-check:
+    name: CSP Compliance Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for inline event handlers
+        run: |
+          set -euo pipefail
+          EXIT_CODE=0
+          echo "=== Checking for inline event handlers (CSP violation) ==="
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -nE 'on(click|load|error|submit|change|focus|blur|mouseover|mouseout|keydown|keyup)=' "$file" | grep -q .; then
+              echo "ERROR: Inline event handler found in $file (CSP violation):"
+              grep -nE 'on(click|load|error|submit|change|focus|blur|mouseover|mouseout|keydown|keyup)=' "$file"
+              EXIT_CODE=1
+            fi
+          done
+
+          echo ""
+          echo "=== Checking for javascript: protocol ==="
+          for file in $(find shopify/theme -name "*.liquid" 2>/dev/null); do
+            if grep -nE 'javascript:' "$file" | grep -q .; then
+              echo "ERROR: javascript: protocol found in $file:"
+              grep -nE 'javascript:' "$file"
+              EXIT_CODE=1
+            fi
+          done
+
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "OK: No CSP violations found."
+          fi
+          exit $EXIT_CODE

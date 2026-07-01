@@ -1,0 +1,255 @@
+{% comment %}
+  page-still-building.liquid
+  "We Are Still Building" — community action page.
+  Hero, meta statement, four category cards, action page overlays, symbolic step tracker.
+  Real organization links. CSP-compliant (no inline onclick, uses addEventListener in JS).
+{% endcomment %}
+
+<div class="page-still-building">
+
+  {%- comment -%} Page hero {%- endcomment -%}
+  <section class="page-hero" id="building-hero">
+    <div class="hero-eyebrow" aria-hidden="true">
+      <div class="gold-rule"></div>
+      We Are Still Building
+      <div class="gold-rule"></div>
+    </div>
+    <h1 class="hero-title">Serving something<br>bigger than ourselves.</h1>
+    <p class="hero-sub">Community &middot; Impact &middot; Purpose</p>
+  </section>
+
+  <div class="shift-line" aria-hidden="true"></div>
+
+  {%- comment -%} Meta statement — the philosophical anchor {%- endcomment -%}
+  <div class="meta-statement">
+    <p>
+      <strong>Nothing is finished.</strong><br>
+      This page isn't either.<br><br>
+      But you don't need a finished page to start.<br>
+      Pick something. Do one thing. Keep going.
+    </p>
+    <p class="meta-action">We're not waiting until everything is perfect to give back.</p>
+  </div>
+
+  {%- comment -%} Category cards {%- endcomment -%}
+  <section class="categories">
+    <div class="categories-inner">
+      <p class="categories-label">Start somewhere real</p>
+      <div class="category-grid">
+
+        <button class="category-card" data-action-open="education" aria-label="Children and Education — see where to start">
+          <span class="category-icon" aria-hidden="true">📚</span>
+          <h2 class="category-title">Children &amp; Education</h2>
+          <p class="category-desc">Show up. Help a kid learn something. Sponsor. Mentor. Tutor. It doesn't take a lot.</p>
+          <span class="category-expand" aria-hidden="true">See where to start →</span>
+        </button>
+
+        <button class="category-card" data-action-open="health" aria-label="Health and Healing — see where to start">
+          <span class="category-icon" aria-hidden="true">🎗️</span>
+          <h2 class="category-title">Health &amp; Healing</h2>
+          <p class="category-desc">Support people fighting hard battles. Your time and resources matter more than you know.</p>
+          <span class="category-expand" aria-hidden="true">See where to start →</span>
+        </button>
+
+        <button class="category-card" data-action-open="community" aria-label="Community Support — see where to start">
+          <span class="category-icon" aria-hidden="true">🤝</span>
+          <h2 class="category-title">Community Support</h2>
+          <p class="category-desc">Neighborhoods, food banks, shelters. People near you need what you have to give.</p>
+          <span class="category-expand" aria-hidden="true">See where to start →</span>
+        </button>
+
+        <button class="category-card" data-action-open="sports" aria-label="Youth and Sports — see where to start">
+          <span class="category-icon" aria-hidden="true">⛸️</span>
+          <h2 class="category-title">Youth &amp; Sports</h2>
+          <p class="category-desc">Give a young athlete the chance you had &mdash; or the one you didn't. This one's personal.</p>
+          <span class="category-expand" aria-hidden="true">See where to start →</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Action page overlays {%- endcomment -%}
+  {% assign action_intro = "This page is intentionally simple.<br><br>If you're here, you're not looking for inspiration.<br><strong>You're looking to do something.</strong><br><br>So here are places to start." %}
+
+  {%- comment -%} Education action page {%- endcomment -%}
+  <div class="action-page" id="action-education" aria-hidden="true" role="dialog" aria-label="Children and Education resources">
+    <div class="action-header">
+      <button class="action-close" data-action-close aria-label="Go back">← Back</button>
+      <span class="action-header-title">We Are Still Building</span>
+    </div>
+    <div class="action-body">
+      <div class="action-meta"><p>{{ action_intro }}</p></div>
+      <h2 class="action-category-title">Children &amp;<br>Education</h2>
+      <ul class="action-list">
+        <li class="action-item">
+          <span class="action-item-name">Compassion International</span>
+          <span class="action-item-what">Sponsor a child — food, education, healthcare, and hope.</span>
+          <a href="https://www.compassion.com" target="_blank" rel="noopener noreferrer" class="action-item-link">Sponsor a child →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">DonorsChoose</span>
+          <span class="action-item-what">Fund a classroom project directly. Teachers post what they need. You make it happen.</span>
+          <a href="https://www.donorschoose.org" target="_blank" rel="noopener noreferrer" class="action-item-link">Fund a classroom →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Big Brothers Big Sisters</span>
+          <span class="action-item-what">Become a mentor. One hour a week changes a kid's trajectory.</span>
+          <a href="https://www.bbbs.org" target="_blank" rel="noopener noreferrer" class="action-item-link">Become a mentor →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Local Schools</span>
+          <span class="action-item-what">Volunteer. Read to kids. Help with after-school programs. Show up.</span>
+          <span class="action-item-link coming-soon">Find local opportunities — coming soon</span>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">826 National</span>
+          <span class="action-item-what">Support creative writing and tutoring programs for students in under-resourced schools.</span>
+          <a href="https://826national.org" target="_blank" rel="noopener noreferrer" class="action-item-link">Get involved →</a>
+        </li>
+      </ul>
+      <div class="action-tracker" id="tracker-education">
+        <button class="tracker-check" data-tracker="education" aria-label="Mark one step taken today"></button>
+        <span class="tracker-text">I took one step today.</span>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Health action page {%- endcomment -%}
+  <div class="action-page" id="action-health" aria-hidden="true" role="dialog" aria-label="Health and Healing resources">
+    <div class="action-header">
+      <button class="action-close" data-action-close aria-label="Go back">← Back</button>
+      <span class="action-header-title">We Are Still Building</span>
+    </div>
+    <div class="action-body">
+      <div class="action-meta"><p>{{ action_intro }}</p></div>
+      <h2 class="action-category-title">Health &amp;<br>Healing</h2>
+      <ul class="action-list">
+        <li class="action-item">
+          <span class="action-item-name">American Cancer Society</span>
+          <span class="action-item-what">Volunteer, donate, or join an event. People fighting cancer need community.</span>
+          <a href="https://www.cancer.org/involved" target="_blank" rel="noopener noreferrer" class="action-item-link">Get involved →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Meals on Wheels</span>
+          <span class="action-item-what">Deliver meals to seniors who can't leave home. One route. Real impact.</span>
+          <a href="https://www.mealsonwheelsamerica.org" target="_blank" rel="noopener noreferrer" class="action-item-link">Volunteer →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Give Blood</span>
+          <span class="action-item-what">One donation saves up to three lives. Takes an hour. The Red Cross makes it easy.</span>
+          <a href="https://www.redcrossblood.org" target="_blank" rel="noopener noreferrer" class="action-item-link">Find a drive →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Mental Health America</span>
+          <span class="action-item-what">Support mental health awareness. Volunteer, advocate, or just share their resources.</span>
+          <a href="https://www.mhanational.org/get-involved" target="_blank" rel="noopener noreferrer" class="action-item-link">Get involved →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Local Hospital Volunteering</span>
+          <span class="action-item-what">Most hospitals take volunteers. Show up for people who need it most.</span>
+          <span class="action-item-link coming-soon">Find local opportunities — coming soon</span>
+        </li>
+      </ul>
+      <div class="action-tracker" id="tracker-health">
+        <button class="tracker-check" data-tracker="health" aria-label="Mark one step taken today"></button>
+        <span class="tracker-text">I took one step today.</span>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Community action page {%- endcomment -%}
+  <div class="action-page" id="action-community" aria-hidden="true" role="dialog" aria-label="Community Support resources">
+    <div class="action-header">
+      <button class="action-close" data-action-close aria-label="Go back">← Back</button>
+      <span class="action-header-title">We Are Still Building</span>
+    </div>
+    <div class="action-body">
+      <div class="action-meta"><p>{{ action_intro }}</p></div>
+      <h2 class="action-category-title">Community<br>Support</h2>
+      <ul class="action-list">
+        <li class="action-item">
+          <span class="action-item-name">Feeding America</span>
+          <span class="action-item-what">Find your local food bank. Volunteer or donate. Hunger is local.</span>
+          <a href="https://www.feedingamerica.org/find-your-local-foodbank" target="_blank" rel="noopener noreferrer" class="action-item-link">Find your food bank →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Habitat for Humanity</span>
+          <span class="action-item-what">Build homes for families in need. No experience required. Show up ready to work.</span>
+          <a href="https://www.habitat.org/volunteer" target="_blank" rel="noopener noreferrer" class="action-item-link">Volunteer to build →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Local Shelters</span>
+          <span class="action-item-what">Homeless shelters always need volunteers. Serve a meal. Sort donations. Be there.</span>
+          <span class="action-item-link coming-soon">Find local opportunities — coming soon</span>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">VolunteerMatch</span>
+          <span class="action-item-what">Search thousands of volunteer opportunities in your area by interest and availability.</span>
+          <a href="https://www.volunteermatch.org" target="_blank" rel="noopener noreferrer" class="action-item-link">Find your match →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Nextdoor Community</span>
+          <span class="action-item-what">Start local. Offer to help a neighbor. Post in your community. Small acts compound.</span>
+          <a href="https://nextdoor.com" target="_blank" rel="noopener noreferrer" class="action-item-link">Start local →</a>
+        </li>
+      </ul>
+      <div class="action-tracker" id="tracker-community">
+        <button class="tracker-check" data-tracker="community" aria-label="Mark one step taken today"></button>
+        <span class="tracker-text">I took one step today.</span>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Sports action page {%- endcomment -%}
+  <div class="action-page" id="action-sports" aria-hidden="true" role="dialog" aria-label="Youth and Sports resources">
+    <div class="action-header">
+      <button class="action-close" data-action-close aria-label="Go back">← Back</button>
+      <span class="action-header-title">We Are Still Building</span>
+    </div>
+    <div class="action-body">
+      <div class="action-meta"><p>{{ action_intro }}</p></div>
+      <h2 class="action-category-title">Youth &amp;<br>Sports</h2>
+      <ul class="action-list">
+        <li class="action-item">
+          <span class="action-item-name">Ice skating scholarships</span>
+          <span class="action-item-what">Support a young skater who can't afford ice time, gear, or coaching. This one's personal to us.</span>
+          <span class="action-item-link coming-soon">Relentless scholarship — coming soon</span>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">US Figure Skating Outreach</span>
+          <span class="action-item-what">Support programs that bring skating to underserved communities.</span>
+          <a href="https://www.usfigureskating.org/skate/skating-opportunities" target="_blank" rel="noopener noreferrer" class="action-item-link">Learn more →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Coach or Volunteer</span>
+          <span class="action-item-what">Local youth leagues, rec centers, and clubs need coaches and volunteers. You have something to give.</span>
+          <span class="action-item-link coming-soon">Find local opportunities — coming soon</span>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Athletes in Action</span>
+          <span class="action-item-what">Using sport to build character and community. Volunteer, donate, or get involved.</span>
+          <a href="https://athletesinaction.org" target="_blank" rel="noopener noreferrer" class="action-item-link">Get involved →</a>
+        </li>
+        <li class="action-item">
+          <span class="action-item-name">Relentless Outreach</span>
+          <span class="action-item-what">Our own community initiatives — sponsorships, clinics, programs. Watch this space.</span>
+          <span class="action-item-link coming-soon">Coming soon →</span>
+        </li>
+      </ul>
+      <div class="action-tracker" id="tracker-sports">
+        <button class="tracker-check" data-tracker="sports" aria-label="Mark one step taken today"></button>
+        <span class="tracker-text">I took one step today.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Still Building Page",
+  "tag": "div",
+  "class": "page-still-building-section"
+}
+{% endschema %}

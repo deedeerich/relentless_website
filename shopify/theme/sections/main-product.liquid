@@ -1,0 +1,72 @@
+{% comment %}
+  main-product.liquid
+  Product detail page — renders product info, images, add-to-cart.
+  Zero-touch payment architecture: Shopify handles all checkout/PCI scope.
+{% endcomment %}
+
+<section class="product-page">
+  <div class="product-inner">
+
+    <div class="product-gallery">
+      {% if product.featured_image %}
+        {{ product.featured_image | image_url: width: 800 | image_tag: alt: product.title, loading: 'eager', class: 'product-main-image' }}
+      {% endif %}
+      {% if product.images.size > 1 %}
+        <div class="product-thumbnails">
+          {% for image in product.images %}
+            <button class="product-thumb" data-image-index="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}">
+              {{ image | image_url: width: 120 | image_tag: alt: product.title, loading: 'lazy' }}
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="product-details">
+      <h1 class="product-title">{{ product.title }}</h1>
+      <p class="product-price">{{ product.selected_or_first_available_variant.price | money }}</p>
+
+      {% if product.description != blank %}
+        <div class="product-description">{{ product.description }}</div>
+      {% endif %}
+
+      {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+        {% unless product.has_only_default_variant %}
+          {% for option in product.options_with_values %}
+            <div class="product-option">
+              <label for="option-{{ option.name | handle }}">{{ option.name }}</label>
+              <select id="option-{{ option.name | handle }}" name="options[{{ option.name }}]">
+                {% for value in option.values %}
+                  <option value="{{ value }}" {% if option.selected_value == value %}selected{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endfor %}
+        {% endunless %}
+
+        <button type="submit"
+                class="product-add-to-cart"
+                {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+          {% if product.selected_or_first_available_variant.available %}
+            {{ 'shop.add_to_cart' | t | default: 'Add to Cart' }}
+          {% else %}
+            {{ 'shop.sold_out' | t | default: 'Sold Out' }}
+          {% endif %}
+        </button>
+      {% endform %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Page",
+  "tag": "div",
+  "class": "main-product-section"
+}
+{% endschema %}

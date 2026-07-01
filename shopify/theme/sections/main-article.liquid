@@ -1,0 +1,40 @@
+{% comment %}
+  main-article.liquid
+  Single blog article page.
+{% endcomment %}
+
+<article class="article-page">
+  <div class="article-inner">
+    <header class="article-header">
+      <h1>{{ article.title }}</h1>
+      <div class="article-meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%B %d, %Y' }}</time>
+        {% if article.author %}
+          <span class="article-author">by {{ article.author }}</span>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if article.image %}
+      <div class="article-hero-image">
+        {{ article.image | image_url: width: 1200 | image_tag: alt: article.title, loading: 'eager' }}
+      </div>
+    {% endif %}
+
+    <div class="article-body">
+      {{ article.content }}
+    </div>
+
+    <footer class="article-footer">
+      <a href="{{ blog.url }}" class="philosophy-cta">← Back to {{ blog.title }}</a>
+    </footer>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Article Page",
+  "tag": "div",
+  "class": "main-article-section"
+}
+{% endschema %}

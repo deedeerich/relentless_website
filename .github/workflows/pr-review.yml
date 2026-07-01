@@ -1,0 +1,76 @@
+name: "PR Review — Claude"
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+concurrency:
+  group: pr-review-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Auto-review on PR open/push (skip drafts and bots)
+    # Interactive on @claude mention in PR comments
+    if: |
+      (github.event_name == 'pull_request' &&
+       !github.event.pull_request.draft &&
+       !endsWith(github.actor, '[bot]')) ||
+      (github.event_name == 'issue_comment' &&
+       contains(github.event.comment.body, '@claude') &&
+       github.event.issue.pull_request) ||
+      (github.event_name == 'pull_request_review_comment' &&
+       contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ github.token }}
+          use_sticky_comment: "true"
+          claude_args: >-
+            --model claude-sonnet-4-6
+            --max-turns 15
+            --allowedTools "Bash(gh pr diff:*),Bash(gh pr view:*),Read,Glob,Grep"
+          prompt: |
+            Review this pull request for the Relentless e-commerce project (Shopify Liquid theme + Python moderation pipeline).
+
+            ## Instructions
+            1. Run `gh pr diff ${{ github.event.pull_request.number || github.event.issue.number }}` to read the diff
+            2. Analyze the changes for the issues listed below
+            3. Post a top-level summary as a PR comment
+
+            ## What to flag (high-value only)
+            - Hardcoded API keys, tokens, secrets, or credentials (NEVER allowed)
+            - Inline event handlers (onclick, onload, etc.) — CSP violation
+            - Images missing alt attributes — WCAG 2.1 AA required
+            - External links missing rel="noopener noreferrer" — security
+            - User input not sanitized (XSS, injection risks)
+            - .env files or sensitive file patterns being committed
+            - Breaking changes to theme.liquid layout structure
+            - Removal of skip-to-content link or aria attributes
+            - Klaviyo/Shopify API keys appearing in Liquid templates instead of settings
+            - Canvas elements missing aria-hidden="true"
+
+            ## What NOT to flag
+            Style, formatting, Liquid code style preferences, missing comments, variable naming — these are not blocking issues for this project.
+
+            ## Output format
+            Post a PR comment with:
+            - One-line verdict (LGTM or issues found)
+            - Brief summary of what the PR does
+            - Any flagged issues with file:line references
+            - Keep it under 20 lines total

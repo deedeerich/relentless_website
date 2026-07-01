@@ -1,0 +1,11 @@
+[environments.staging]
+store = "relentlessperforma-staging.myshopify.com"
+theme = ""
+directory = "shopify/theme"
+ignore = ["config/settings_data.json"]
+
+[environments.production]
+store = "relentlessperforma.myshopify.com"
+theme = ""
+directory = "shopify/theme"
+ignore = ["config/settings_data.json"]
