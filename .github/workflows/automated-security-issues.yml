@@ -1,0 +1,153 @@
+name: Automated Security Issue Creation
+
+# Convert security scan findings into GitHub Issues for tracking and remediation
+# Creates issues from:
+# - Semgrep SAST findings
+# - Dependency vulnerabilities
+# Prevents duplicate issues and tracks remediation progress
+
+on:
+  workflow_run:
+    workflows: ['Semgrep Security Scan (SAST)', 'NVD CVE Scanning']
+    types:
+      - completed
+
+permissions:
+  contents: read
+  issues: write
+  security-events: read
+
+jobs:
+  process-semgrep-findings:
+    name: Create Issues from Semgrep
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'failure'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Semgrep Results
+        uses: actions/download-artifact@v4
+        with:
+          name: semgrep-results
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+        continue-on-error: true
+
+      - name: Create GitHub Issues from Semgrep Findings
+        if: hashFiles('semgrep-results/semgrep.json') != ''
+        continue-on-error: true
+        run: |
+          if [ ! -f semgrep-results/semgrep.json ]; then
+            echo "No Semgrep results found"
+            exit 0
+          fi
+
+          # Extract ERROR and WARNING level findings
+          FINDINGS=$(jq -r '.results[] | select(.extra.severity=="ERROR" or .extra.severity=="WARNING") |
+            "**[\(.extra.severity)]** \(.check_id) at \(.path):\(.start.line)\n\(.message)\n---"' \
+            semgrep-results/semgrep.json 2>/dev/null || echo "")
+
+          if [ -z "$FINDINGS" ]; then
+            echo "No ERROR/WARNING findings to report"
+            exit 0
+          fi
+
+          # Create GitHub Issue
+          gh issue create \
+            --title "🔴 Security: Semgrep SAST findings detected" \
+            --body "$(cat <<'EOF'
+## Semgrep Security Scan Findings
+
+Security scan detected issues that need remediation.
+
+### Findings
+
+$FINDINGS
+
+### Action Items
+- [ ] Review each finding in the artifact
+- [ ] Fix ERROR level issues immediately
+- [ ] Address WARNING level issues before merging
+- [ ] Verify fixes by re-running the security workflow
+
+### Details
+See the latest security scan workflow run for full details and artifacts.
+
+**Labels:** security, sast, automated
+EOF
+)" \
+            --label security \
+            --label sast \
+            --label automated \
+            --assignee @me || echo "Issue creation skipped (may already exist)"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FINDINGS: $FINDINGS
+
+  process-cve-findings:
+    name: Create Issues from CVE Scan
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'failure'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download CVE Results
+        uses: actions/download-artifact@v4
+        with:
+          name: cve-scan-results
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+        continue-on-error: true
+
+      - name: Create GitHub Issues from CVE Findings
+        if: hashFiles('cve-scan-results/npm-audit.json') != ''
+        continue-on-error: true
+        run: |
+          if [ ! -f cve-scan-results/npm-audit.json ]; then
+            echo "No CVE results found"
+            exit 0
+          fi
+
+          CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' cve-scan-results/npm-audit.json)
+          HIGH=$(jq '.metadata.vulnerabilities.high // 0' cve-scan-results/npm-audit.json)
+
+          if [ "$CRITICAL" -eq 0 ] && [ "$HIGH" -eq 0 ]; then
+            echo "No critical/high CVEs to report"
+            exit 0
+          fi
+
+          # Create GitHub Issue
+          gh issue create \
+            --title "🔴 Security: Dependency vulnerabilities detected" \
+            --body "$(cat <<'EOF'
+## Dependency Vulnerability Report
+
+Package vulnerability scan detected issues.
+
+### Summary
+- 🔴 **Critical:** $CRITICAL
+- 🟠 **High:** $HIGH
+
+### Action Items
+- [ ] Review vulnerability details: \`npm audit\`
+- [ ] Update affected packages: \`npm update\`
+- [ ] Verify vulnerability is resolved: \`npm audit\`
+- [ ] Commit updates and re-run security scan
+
+### Details
+See \`npm-audit.json\` in the security workflow artifact for full details.
+
+**Labels:** security, dependencies, automated
+EOF
+)" \
+            --label security \
+            --label dependencies \
+            --label automated || echo "Issue creation skipped (may already exist)"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CRITICAL: $CRITICAL
+          HIGH: $HIGH

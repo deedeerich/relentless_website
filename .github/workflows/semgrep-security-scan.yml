@@ -1,0 +1,126 @@
+name: Semgrep Security Scan (SAST)
+
+# Static Application Security Testing for Liquid templates, JavaScript, and TypeScript
+# Runs on push to main/develop and all PRs to catch security issues early
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'shopify/theme/**'
+      - 'moderation/**'
+      - 'scripts/**'
+      - '.github/workflows/semgrep-security-scan.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'shopify/theme/**'
+      - 'moderation/**'
+      - 'scripts/**'
+  schedule:
+    - cron: '0 3 * * *' # Daily at 3 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  checks: write
+
+jobs:
+  semgrep:
+    name: Semgrep SAST Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Semgrep
+        run: |
+          pip install semgrep
+
+      - name: Run Semgrep Scan
+        id: semgrep
+        continue-on-error: true
+        run: |
+          mkdir -p semgrep-results
+
+          # Run Semgrep with security-focused rulesets
+          # p/security-audit: general security patterns
+          # p/javascript: JS/TS security issues
+          # p/owasp-top-ten: OWASP Top 10 patterns
+          semgrep scan \
+            --config=p/security-audit \
+            --config=p/javascript \
+            --config=p/owasp-top-ten \
+            --config=p/cwe-top-25 \
+            --sarif-output=semgrep-results/semgrep.sarif \
+            --json-output=semgrep-results/semgrep.json \
+            --text 2>&1 | tee semgrep-results/semgrep.txt || true
+
+      - name: Upload SARIF to GitHub Security Tab
+        if: always() && hashFiles('semgrep-results/semgrep.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: semgrep-results/semgrep.sarif
+          wait-for-processing: false
+        continue-on-error: true
+
+      - name: Upload Semgrep Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-results
+          path: semgrep-results/
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Generate Semgrep Summary
+        if: always() && hashFiles('semgrep-results/semgrep.json') != ''
+        run: |
+          {
+            echo "## 🔎 Semgrep Security Scan Summary"
+            echo ""
+            echo "**Scan Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+            echo ""
+
+            if [ -f semgrep-results/semgrep.json ]; then
+              TOTAL=$(jq '.results | length' semgrep-results/semgrep.json 2>/dev/null || echo "0")
+              ERROR_COUNT=$(jq '[.results[] | select(.extra.severity=="ERROR")] | length' semgrep-results/semgrep.json 2>/dev/null || echo "0")
+              WARNING_COUNT=$(jq '[.results[] | select(.extra.severity=="WARNING")] | length' semgrep-results/semgrep.json 2>/dev/null || echo "0")
+
+              echo "### 📊 Findings"
+              echo "- 🔴 **ERRORS:** $ERROR_COUNT"
+              echo "- 🟡 **WARNINGS:** $WARNING_COUNT"
+              echo "- **TOTAL:** $TOTAL"
+              echo ""
+
+              if [ "$ERROR_COUNT" -gt 0 ] || [ "$WARNING_COUNT" -gt 0 ]; then
+                echo "### ⚠️ Action Required"
+                echo "- Review findings in [GitHub Security Tab](https://github.com/${{ github.repository }}/security/code-scanning)"
+                echo "- Fix ERROR and WARNING level issues before merging"
+              else
+                echo "### ✅ All Clear"
+                echo "- No security issues detected"
+              fi
+            else
+              echo "No findings detected."
+            fi
+            echo ""
+            echo "### 📋 Details"
+            echo "- **Rules:** p/security-audit, p/javascript, p/owasp-top-ten, p/cwe-top-25"
+            echo "- **Scope:** Shopify Liquid, JavaScript, TypeScript, Python scripts"
+            echo "- **Results:** [Security Tab](https://github.com/${{ github.repository }}/security/code-scanning)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail on Critical Issues
+        if: always() && hashFiles('semgrep-results/semgrep.json') != ''
+        run: |
+          ERROR_COUNT=$(jq '[.results[] | select(.extra.severity=="ERROR")] | length' semgrep-results/semgrep.json 2>/dev/null || echo "0")
+          if [ "$ERROR_COUNT" -gt 0 ]; then
+            echo "❌ Security scan found $ERROR_COUNT ERROR level issues"
+            echo "Please review and fix before merging"
+            exit 1
+          fi
